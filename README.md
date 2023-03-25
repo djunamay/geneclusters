@@ -1,6 +1,6 @@
 
 # *genecluster*
-![png](README_files/network_50_ex4.png, width=50%)
+<img src="README_files/network_50_ex4.png" alt= “” width="50%" height="50%">
 
 This code let's you do ...
 
