@@ -45,3 +45,14 @@ for name in np.array(['Ex']):#, 'In', 'Mic', 'Ast', 'Oli', 'Opc']):
     plot_permutations(permuted_t, observed_t, p, Nperm, name)
     plt.show()
 ```
+
+    ** Ex **
+
+
+
+      0%|          | 0/5 [00:00<?, ?it/s]
+
+
+
+![png](README_files/README_3_2.png)
+
