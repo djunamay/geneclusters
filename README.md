@@ -67,6 +67,10 @@ Kernighan-Lin algorithm:
 
 Extending the algorithm to multiple partitions:
 
+Sources: 
+https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/kernlin.pdf
+
+
 Biological intuition:
 ---
 
