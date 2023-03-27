@@ -56,6 +56,18 @@ frame.head()
 ### Method
 <img src="README_files/method2.png" alt= “” width="80%" height="80%">
 
+### Goal
+We have a weighted graph with 2n nodes and we want to divide it into two parts, where each part has size, while minimizing the sum of weights crossing the graph partitioning.
+
+The Kernighan-Lin heuristic involves starting with some partitioning that satisfies the n requirement, then repeatedly swapping nodes between the partitioning to minimize the loss function.
+
+Kernighan-Lin algorithm: 
+1. Divide the network into two parts A and B arbitrarily so that A and B are of equal size.
+2. Swap nodes from A and B to reduce the cost function until convergence.
+
+Extending the algorithm to multiple partitions:
+
+Biological intuition:
 ---
 
 ### Visualizing and interpreting clusters
