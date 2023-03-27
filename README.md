@@ -3,12 +3,6 @@
 <img src="README_files/network_50_exN.png" alt= “” width="50%" height="50%">
 
 *Overview*
-<img src="README_files/method.png" alt= “” width="100%" height="100%">
-
-
-
-*Method*
-
 
 ---
 
@@ -58,6 +52,9 @@ frame.to_csv('kernighan_clusters.csv', index = False)
 ```python
 frame.head()
 ```
+---
+### Method
+<img src="README_files/method.png" alt= “” width="100%" height="100%">
 
 ---
 
