@@ -2,7 +2,13 @@
 # *genecluster*
 <img src="README_files/network_50_exN.png" alt= “” width="50%" height="50%">
 
-This code let's you do ...
+*Overview*
+<img src="README_files/method.png" alt= “” width="100%" height="100%">
+
+
+
+*Method*
+
 
 ---
 
