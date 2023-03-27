@@ -54,7 +54,7 @@ frame.head()
 ```
 ---
 ### Method
-<img src="README_files/method.png" alt= “” width="100%" height="100%">
+<img src="README_files/method.png" alt= “” width="80%" height="80%">
 
 ---
 
