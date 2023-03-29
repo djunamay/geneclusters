@@ -9,7 +9,7 @@ $C\in[0,1]$
 
 $T < N$ where $N=|Genes|$
 
-$C$ captures our inverse confidence in negative annotations; The absence of an edge between a gene and a pathway has two sources: (1) the gene is not part of the pathway, (2) the gene and the pathway haven't been studied together. C is the probability that a gene is part of a pathway, given that the edge between gene and pathway is not annotated (think; probability of a false negative).
+$C$ captures our inverse confidence in negative annotations; Here, we assume two sources for the absence of an edge between a gene and a pathway: (1) the gene is not part of the pathway, (2) the gene and the pathway haven't been studied together. C is the probability that a gene is part of a pathway, given that the edge between gene and pathway is not annotated (think; probability of a false negative).
 
 ---
 
