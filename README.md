@@ -5,7 +5,8 @@
 ### Overview
 This package takes as input a dictionary of genesets and returns non-redundant gene clusters, by solving the graph partitioning problem using the Kernighan Lin heuristic. User-adjustable parameters include "C" and "threshold", described below:
 
-$C=P, $ for $C\in[0,1]$
+$C=P, $ for $C\in[0,1]$\
+$C$ captures our confidence in negative annotations, i.e. how likely is gene A part of pathway X, given that the connection is 0. Probability of a false negative. 
 ---
 
 ### Quickstart
