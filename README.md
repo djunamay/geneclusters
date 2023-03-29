@@ -7,7 +7,7 @@ This package takes as input a dictionary of genesets and returns non-redundant g
 
 $C\in[0,1]$
 
-$T<N$ where $N=|Genes|$
+$T < N$ where $N=|Genes|$
 
 $C$ captures our inverse confidence in negative annotations; The absence of an edge between a gene and a pathway has two sources: (1) the gene is not part of the pathway, (2) the gene and the pathway haven't been studied together. C is the probability that a gene is part of a pathway, given that the edge between gene and pathway is not annotated (think; probability of a false negative).
 
