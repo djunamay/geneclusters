@@ -5,7 +5,7 @@
 ### Overview
 This package takes as input a dictionary of genesets and returns non-redundant gene clusters, by solving the graph partitioning problem using the Kernighan Lin heuristic. User-adjustable parameters include "C" and "threshold", described below:
 
-
+$C=P, C	]\in[0,1]$
 ---
 
 ### Quickstart
