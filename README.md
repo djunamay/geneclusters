@@ -53,12 +53,13 @@ frame.to_csv('kernighan_clusters.csv', index = False)
 frame.head()
 ```
 ---
-### Method
+### Kernighan-Lin Heuristic
 <img src="README_files/method2.png" alt= “” width="80%" height="80%">
 
 Sources: 
 https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/kernlin.pdf
 https://en.wikipedia.org/wiki/Kernighan%E2%80%93Lin_algorithm
+
 ---
 
 ### Visualizing and interpreting clusters
