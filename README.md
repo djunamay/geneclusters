@@ -3,7 +3,7 @@
 <img src="README_files/network_50_exN.png" alt= “” width="50%" height="50%">
 
 ### Overview
-This package takes as input a dictionary of genesets and returns non-redundant gene clusters, by solving the graph partitioning problem using the Kernighan Lin heuristic. User-adjustable parameters include "C" and "threshold", described below:
+This package takes as input a dictionary of genesets and returns non-redundant gene clusters, by solving the graph partitioning problem using the Kernighan Lin heuristic. User-adjustable parameters include the confidence parameter ($C$) and threshold parameter ($T$), described below:
 
 $C\in[0,1]$
 
