@@ -7,7 +7,7 @@ This package takes as input a dictionary of genesets and returns non-redundant g
 
 $C=P$ for $C\in[0,1]$\
 
-$C$ captures our confidence in negative annotations, i.e. how likely is gene A part of pathway X, given that the connection is 0. Probability of a false negative. 
+$C$ captures our inverse confidence in negative annotations; The absence of an edge between a gene and a pathway has two sources: (1) the gene is not part of the pathway, (2) the gene and the pathway haven't been studied together. C is the probability that a gene is part of a pathway, given that the edge between gene and pathway is not annotated (think; probability of a false negative).
 
 ---
 
@@ -51,23 +51,18 @@ frame.columns = ['cluster', 'description', 'is_gene']
 frame.to_csv('kernighan_clusters.csv', index = False)
 ```
 
-4. what the output looks like
-
-
-```python
-frame.head()
-```
 ---
 ### Kernighan-Lin Heuristic
 <img src="README_files/method2.png" alt= “” width="80%" height="80%">
 
 Sources: 
-[CMU](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/kernlin.pdf)
+[CMU](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/kernlin.pdf)\
 [Wikipedia](https://en.wikipedia.org/wiki/Kernighan%E2%80%93Lin_algorithm)
 
 ---
 
 ### Visualizing and interpreting clusters
+Coming soon...
 
 ----
 
