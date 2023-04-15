@@ -67,6 +67,4 @@ frame.to_csv('kernighan_clusters.csv', index = False)
 Coming soon...
 
 ----
-
-### Benchmarking against other packages
-Coming soon...
+TODOS: https://docs.google.com/document/d/1J4hWWuBwt3cu2HGaCzkejW5mHFVFrVVVMow2A0meU5E/edit?usp=sharing
