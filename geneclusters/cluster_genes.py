@@ -8,6 +8,7 @@ from tqdm.contrib.concurrent import process_map
 from functools import partial
 import numba as nb
 from .prepare_inputs import get_gene_pathway_matrix
+from pdb import set_trace
 
 @nb.njit()
 def evaluate_cut(matrix, labeling, c):
@@ -37,21 +38,35 @@ def create_random_labeling(matrix, threshold):
     np.random.shuffle(labeling)
     return labeling
 
-@nb.njit()
+#@nb.njit()
 def get_cost(matrix, i, j, c):
+    '''
+    returns 
+    Args:
+        matrix ndarray
+            gene x pathway matrix
+        labeling 1D ndarray
+        cluster_1 1D ndarray
+            new labels for cluster_1
+        cluster_2 1D ndarray
+            new labels for cluster_2
+        c float (0<= c <= 1)
+            probability of false negative pathway-gene association
+    '''
     if j < i:
         i, j = j, i
-    if i >= matrix.shape[0]:
+    if i >= matrix.shape[0]: # if i >matrix.shape[0], both i and j will index columns, so connection is zero
         return 0
-    if j < matrix.shape[0]:
+    if j < matrix.shape[0]: # if j<matrix.shape[0], both j and i will index rows, so connection is zero
         return 0
     
-    j -= matrix.shape[0]
+    j -= matrix.shape[0] # j must index columns
     
-    return max(matrix[i, j], c)
+    return max(matrix[i, j], c) # if connection is 0, return the probability of a false negative
 
-@nb.njit()
+#@nb.njit()
 def cost_to_other(matrix, source, others, c):
+    set_trace()
     costs = np.zeros_like(source)
     for i, a in enumerate(source):
         for b in others:
@@ -74,13 +89,13 @@ def get_pairwise_improvements(matrix, labeling, a, b, c):
     internal_b = cost_to_other(matrix, nodes_b, nodes_b, c)
     ext_a_to_b = cost_to_other(matrix, nodes_a, nodes_b, c)
     ext_b_to_a = cost_to_other(matrix, nodes_b, nodes_a, c)
-    D_a = ext_a_to_b - internal_a
+    D_a = ext_a_to_b - internal_a # want to maximize internal costs and minimize external costs
     D_b = ext_b_to_a - internal_b
     cross_costs = get_cross_costs(matrix, nodes_a, nodes_b, c)
     all_improvements = np.zeros_like(cross_costs)
     for i in nb.prange(all_improvements.shape[0]):
         for j in range(all_improvements.shape[1]):
-            all_improvements[i, j] = D_a[i] + D_b[j] - 2 * cross_costs[i , j]
+            all_improvements[i, j] = D_a[i] + D_b[j] - 2 * cross_costs[i , j] # cont here
     return all_improvements, nodes_a, nodes_b
 
 @nb.njit()
