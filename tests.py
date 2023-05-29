@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
 from assertpy import assert_that
-from geneclusters.prepare_inputs import *
-from geneclusters.cluster_genes import *
+from geneclusters.cluster_genes_new import *
 
 '''
 Run tests
@@ -45,3 +44,38 @@ def test_create_random_labeling():
         else:
             # if N is divisble by nclust, a single cluster size should exist
             assert_that(len(np.unique(uniques[1]))==1).is_true()
+
+def test_compute_internal_cost():
+    """
+    Test function that computes internal cost for all nodes in a given partition
+    """
+    path = './examples/test_dict.npy'
+    mat = get_gene_pathway_matrix(path)
+    pathway_names = mat.index
+    gene_names = mat.columns
+    matrix = np.ascontiguousarray(mat.values.T)
+    
+    labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+    Ic = np.zeros(len(labeling), dtype = int)
+    compute_costs(0, labeling, matrix, Ic, internal=True)
+    compute_costs(1, labeling, matrix, Ic, internal=True)
+    
+    ground_truth_Ic = np.array([0, 1, 0, 1, 1, 0, 2, 1])
+    assert_that(np.array_equal(Ic, ground_truth_Ic)).is_true()
+    
+def test_compute_external_cost():
+    """
+    Test function that computes external cost for all nodes in a given partition
+    """
+    path = './examples/test_dict.npy'
+    mat = get_gene_pathway_matrix(path)
+    pathway_names = mat.index
+    gene_names = mat.columns
+    matrix = np.ascontiguousarray(mat.values.T)
+    
+    labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+    Ec = np.zeros(len(labeling), dtype = int)
+    compute_costs(0, labeling, matrix, Ec, internal = False)
+    compute_costs(1, labeling, matrix, Ec, internal = False)
+    ground_truth_Ec = np.array([2, 1, 1, 1, 0, 3, 1, 1])
+    assert_that(np.array_equal(Ec, ground_truth_Ec)).is_true()
