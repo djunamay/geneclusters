@@ -44,6 +44,9 @@ def test_create_random_labeling():
         else:
             # if N is divisble by nclust, a single cluster size should exist
             assert_that(len(np.unique(uniques[1]))==1).is_true()
+            
+def test_get_cross_costs():
+    pass
 
 def test_compute_internal_cost():
     """
@@ -56,9 +59,10 @@ def test_compute_internal_cost():
     matrix = np.ascontiguousarray(mat.values.T)
     
     labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+    cross_costs, partition1_indices, partition2_indices = get_cross_costs(labeling, 0, 1, matrix, 0)
     Ic = np.zeros(len(labeling), dtype = int)
-    compute_costs(0, labeling, matrix, Ic, internal=True)
-    compute_costs(1, labeling, matrix, Ic, internal=True)
+    compute_internal_cost(partition1_indices, labeling, 0, matrix, Ic)
+    compute_internal_cost(partition2_indices, labeling, 0, matrix, Ic)
     
     ground_truth_Ic = np.array([0, 1, 0, 1, 1, 0, 2, 1])
     assert_that(np.array_equal(Ic, ground_truth_Ic)).is_true()
@@ -74,8 +78,9 @@ def test_compute_external_cost():
     matrix = np.ascontiguousarray(mat.values.T)
     
     labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+    cross_costs, partition1_indices, partition2_indices = get_cross_costs(labeling, 0, 1, matrix, 0)
+
     Ec = np.zeros(len(labeling), dtype = int)
-    compute_costs(0, labeling, matrix, Ec, internal = False)
-    compute_costs(1, labeling, matrix, Ec, internal = False)
+    compute_external_cost(partition1_indices, partition2_indices, cross_costs, Ec)
     ground_truth_Ec = np.array([2, 1, 1, 1, 0, 3, 1, 1])
     assert_that(np.array_equal(Ec, ground_truth_Ec)).is_true()
