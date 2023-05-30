@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 from nltk import flatten
+from tqdm import tqdm
+import numpy.ma as ma
 
 def get_gene_pathway_matrix(path_to_dict):
     '''
@@ -8,6 +10,9 @@ def get_gene_pathway_matrix(path_to_dict):
     Args:
         path_to_dict
             ndarray dictionary mapping pathway names to genes (e.g. as downloaded from GSEA)
+    Returns:
+        matrix ndarray
+            gene x pathway matrix of edge weights
     '''
     paths = np.load(path_to_dict, allow_pickle=True).item()
     genes = np.unique(flatten(list(paths.values())))
@@ -27,6 +32,9 @@ def create_random_labeling(matrix, threshold):
             gene x pathway matrix
         threshold int
             number of genes per cluster. Min = 1, Max = total number of genes and pathways
+    Returns:
+        labeling 1D ndarray
+            random cluster partition labels of length N-genes + N-pathways
     '''
     N = np.sum(matrix.shape)
     num_clusters = np.ceil(N / threshold)
@@ -37,7 +45,19 @@ def create_random_labeling(matrix, threshold):
 
 def compute_costs(i, j, c, matrix):
     '''
-    Compute cost between node a and b
+    Compute cost between node i and j
+    Args:
+        i int
+            index of first node (in labeling vector)
+        j int
+            index of second node (in labeling vector)
+        c float 
+            probability of false negative pathway-gene association (0<=c<= 1)
+        matrix ndarray
+            gene x pathway matrix
+    Returns:
+        cost float
+            edge weight between node i and j
     '''
     x, y = matrix.shape
     if (i<x) & (j>=x):
@@ -50,6 +70,21 @@ def compute_costs(i, j, c, matrix):
 def get_cross_costs(labeling, partition1, partition2, matrix, c):
     '''
     Compute pairwise costs of nodes in partition A and nodes in partition B
+    Args:
+        labeling 1D ndarray
+            output vector from create_random_labeling()
+        partition1 int
+            cluster 1 label
+        partition2 int
+            cluster 2 label
+        matrix ndarray
+            gene x pathway matrix
+        c float 
+            probability of false negative pathway-gene association (0<=c<= 1)
+    Returns:
+        cost-matrix ndarray
+            len(partition1) x len(partition2) matrix, where entries represent edge weights for pairwise nodes in partition1 and partition2
+        
     ''' 
     partition1_indices = np.arange(len(labeling))[labeling==partition1]
     partition2_indices = np.arange(len(labeling))[labeling==partition2]
@@ -63,7 +98,18 @@ def get_cross_costs(labeling, partition1, partition2, matrix, c):
 
 def compute_internal_cost(partition_indices, labeling, c, matrix, Ic):
     '''
-    Compute internal cost for each node in partition A
+    Compute internal cost for each node in partition A and save it to corresponding index in the Ic vector
+    Args:
+        partition_indices 1D ndarray (int) 
+            index values for partition of interest in labeling vector
+        labeling 1D ndarray
+            output vector from create_random_labeling()
+        c float 
+            probability of false negative pathway-gene association (0<=c<= 1)
+        matrix ndarray
+            gene x pathway matrix
+        Ic 1D ndarray
+            empty vector of length = len(labeling)        
     '''
     for i in partition_indices:
         for j in partition_indices:
@@ -74,11 +120,139 @@ def compute_internal_cost(partition_indices, labeling, c, matrix, Ic):
                 
 def compute_external_cost(partition1_indices, partition2_indices, cross_costs, Ec):
     '''
-    Compute external costs for each node in partitions A and B
+    Compute external costs for each node in partitions A and B and save it to corresponding index in the Ec vector
+    Args:
+        partition_indices 1D ndarray (int) 
+            index values for partitions of interest in labeling vector
+        labeling 1D ndarray
+            output vector from create_random_labeling()
+        c float 
+            probability of false negative pathway-gene association (0<=c<= 1)
+        matrix ndarray
+            gene x pathway matrix
+        Ec 1D ndarray
+            empty vector of length = len(labeling)        
     '''
     Ec[partition1_indices] = np.sum(cross_costs, axis = 1)
     Ec[partition2_indices] = np.sum(cross_costs, axis = 0)
     
-### Adapt tests to the new functions
-### Finish annotating these functions
 ### Is the external cost computed between A and B or between A and other?
+
+def compute_cost_metrics(labeling, matrix, partition1, partition2, c):
+    cross_costs, partition1_indices, partition2_indices = get_cross_costs(labeling, partition1, partition2, matrix, c)
+    Ic = np.zeros(len(labeling), dtype = int)
+    compute_internal_cost(partition1_indices, labeling, c, matrix, Ic)
+    compute_internal_cost(partition2_indices, labeling, c, matrix, Ic)
+
+    Ec = np.zeros(len(labeling), dtype = int)
+    compute_external_cost(partition1_indices, partition2_indices, cross_costs, Ec)
+
+    D = Ec-Ic
+    return cross_costs, partition1_indices, partition2_indices, D
+
+def kernighan_lin_step(labeling, matrix, partition1, partition2, c):
+    iteration = np.floor(len(labeling)/2).astype(int)
+
+    a_out = np.zeros(iteration)
+    b_out = np.zeros(iteration)
+    g_out = np.zeros(iteration)
+
+    labeling_mask = np.zeros(labeling.shape)
+    labeling_temp = labeling.copy()
+    for it in range(iteration):
+        #print('***')
+        #print(it)
+        cross_costs, partition1_indices, partition2_indices, D = compute_cost_metrics(labeling_temp, matrix, partition1, partition2, c)
+        pairwise_d_sums = np.add.outer(D[partition1_indices], D[partition2_indices])
+        g = pairwise_d_sums-2*cross_costs
+        #print(g)
+
+            ## something is going wrong after the first iteration here - check if the next iteration works..
+        x, y = g.shape
+        g_max_temp = np.argmax(g)
+        i = g_max_temp // y
+        j = g_max_temp % y
+
+        index1 = partition1_indices[i]
+        index2 = partition2_indices[j]
+
+        a_out[it] = index1
+        b_out[it] = index2
+        g_out[it] = g[i,j]
+        #print(g[i,j])
+
+        labeling_mask[index1] = 1
+        labeling_mask[index2] = 1
+        labeling_temp = ma.masked_array(labeling_temp, mask = labeling_mask)
+
+    cumulative_sum = np.cumsum(g_out)
+    k = np.argmax(cumulative_sum)
+    gmax = cumulative_sum[k]
+    if gmax > 0:
+        ra = a_out[:k+1].astype(int)
+        rb = b_out[:k+1].astype(int)
+        labeling[ra], labeling[rb] = labeling[rb], labeling[ra]
+        return gmax
+    else:
+        return 0
+    
+def full_kl_step(labeling, matrix, c):
+    num_clusters = len(set(labeling))
+    order = np.random.permutation(num_clusters ** 2)
+    impr = 0
+    for o in order:
+        cluster_1, cluster_2 = o // num_clusters, o % num_clusters
+        impr+=kernighan_lin_step(labeling, matrix, cluster_1, cluster_2, c)
+    return impr
+    
+# find k which maximizes the sum g_out[0], g_out[1]... g_out[k]
+# if this sum is > 0:
+#Exchange a_out[0] with b_out[0] up until k
+# repeat from HERE until g_max <=0
+
+def evaluate_cut(matrix, labeling, c):
+    value = 0
+    for i in range(matrix.shape[0]):
+        for j in range(matrix.shape[1]):
+            if labeling[i] != labeling[j + matrix.shape[0]]:
+                if matrix[i, j]:
+                    value += 1
+                else:
+                    value += c
+    return value
+
+def run_KL(labeling, matrix, c):
+    tot = 0
+    with tqdm() as p:
+        while True:
+            impr = full_kl_step(labeling, matrix, c)
+            tot += impr
+            p.set_postfix({
+                    'tot_impr': tot,
+                    'last_impr': impr,
+                    'loss': evaluate_cut(matrix, labeling, c)
+            })
+            p.update()
+            if impr==0:
+                break
+                
+def get_kernighan_lin_clusters(path, threshold, C):
+    '''
+    returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
+    Args:
+        path str
+            path to pathway-gene dictionary as ndarray
+        threshold int
+            number of genes per cluster. Min = 1, Max = total number of genes and pathways
+        C float
+    '''
+    mat = get_gene_pathway_matrix(path)
+    pathway_names = mat.index
+    gene_names = mat.columns
+    matrix = np.ascontiguousarray(mat.values.T)
+    labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+    run_KL(labeling, matrix, 0)
+    frame = pd.DataFrame(labeling)
+    frame['description'] = np.concatenate([gene_names, pathway_names])
+    frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
+    return frame
