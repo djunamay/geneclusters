@@ -3,7 +3,7 @@ import pandas as pd
 from nltk import flatten
 from tqdm import tqdm
 import numpy.ma as ma
-
+from ipdb import set_trace
 def get_gene_pathway_matrix(path_to_dict):
     '''
     returns pandas dataframe of pathways x genes indicating which pathway-gene pairs are key-value pairs in the input dictionary 
@@ -139,6 +139,23 @@ def compute_external_cost(partition1_indices, partition2_indices, cross_costs, E
 ### Is the external cost computed between A and B or between A and other?
 
 def compute_cost_metrics(labeling, matrix, partition1, partition2, c):
+    '''
+    Compute the cost metrics for KL clustering
+    Args:
+        labeling 1D ndarray
+            output vector from create_random_labeling()
+        matrix ndarray
+            gene x pathway matrix
+        partition1 int
+            cluster 1 label
+        partition2 int
+            cluster 2 label
+        c float 
+            probability of false negative pathway-gene association (0<=c<= 1)
+    Returns:
+        - pairwise costs between nodes in partition1 and partition 2
+        - per-node externval vs internal cost (D)
+    '''
     cross_costs, partition1_indices, partition2_indices = get_cross_costs(labeling, partition1, partition2, matrix, c)
     Ic = np.zeros(len(labeling), dtype = int)
     compute_internal_cost(partition1_indices, labeling, c, matrix, Ic)
@@ -151,23 +168,36 @@ def compute_cost_metrics(labeling, matrix, partition1, partition2, c):
     return cross_costs, partition1_indices, partition2_indices, D
 
 def kernighan_lin_step(labeling, matrix, partition1, partition2, c):
-    iteration = np.floor(len(labeling)/2).astype(int)
-
+    '''
+    Reassign labels between two partitions based on kernighan-lin algorithm
+    Args:
+        labeling 1D ndarray
+            output vector from create_random_labeling()
+        matrix ndarray
+            gene x pathway matrix
+        partition1 int
+            cluster 1 label
+        partition2 int
+            cluster 2 label
+        c float 
+            probability of false negative pathway-gene association (0<=c<= 1)
+    '''
+    A = np.where(labeling == partition1)[0]
+    B = np.where(labeling == partition2)[0]
+    iteration = np.min((len(A), len(B)))
+    
     a_out = np.zeros(iteration)
     b_out = np.zeros(iteration)
     g_out = np.zeros(iteration)
 
     labeling_mask = np.zeros(labeling.shape)
     labeling_temp = labeling.copy()
+    
     for it in range(iteration):
-        #print('***')
-        #print(it)
         cross_costs, partition1_indices, partition2_indices, D = compute_cost_metrics(labeling_temp, matrix, partition1, partition2, c)
         pairwise_d_sums = np.add.outer(D[partition1_indices], D[partition2_indices])
         g = pairwise_d_sums-2*cross_costs
-        #print(g)
 
-            ## something is going wrong after the first iteration here - check if the next iteration works..
         x, y = g.shape
         g_max_temp = np.argmax(g)
         i = g_max_temp // y
@@ -179,7 +209,6 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c):
         a_out[it] = index1
         b_out[it] = index2
         g_out[it] = g[i,j]
-        #print(g[i,j])
 
         labeling_mask[index1] = 1
         labeling_mask[index2] = 1
@@ -197,6 +226,15 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c):
         return 0
     
 def full_kl_step(labeling, matrix, c):
+    '''
+    Apply kernighan-lin algorithm to all partition pairs
+        labeling 1D ndarray
+            output vector from create_random_labeling()
+        matrix ndarray
+            gene x pathway matrix
+        c float 
+            probability of false negative pathway-gene association (0<=c<= 1)
+    '''
     num_clusters = len(set(labeling))
     order = np.random.permutation(num_clusters ** 2)
     impr = 0
@@ -205,12 +243,18 @@ def full_kl_step(labeling, matrix, c):
         impr+=kernighan_lin_step(labeling, matrix, cluster_1, cluster_2, c)
     return impr
     
-# find k which maximizes the sum g_out[0], g_out[1]... g_out[k]
-# if this sum is > 0:
-#Exchange a_out[0] with b_out[0] up until k
-# repeat from HERE until g_max <=0
 
 def evaluate_cut(matrix, labeling, c):
+    '''
+    Compute loss based on specified partitioning.
+    Args:
+        labeling 1D ndarray
+            output vector from create_random_labeling()
+        matrix ndarray
+            gene x pathway matrix
+        c float 
+            probability of false negative pathway-gene association (0<=c<= 1)
+    '''
     value = 0
     for i in range(matrix.shape[0]):
         for j in range(matrix.shape[1]):
@@ -222,6 +266,16 @@ def evaluate_cut(matrix, labeling, c):
     return value
 
 def run_KL(labeling, matrix, c):
+    '''
+    Run kernighan-lin algorithm to cluster gene-pathway matrix into equally-sized partitions
+    Args:
+        labeling 1D ndarray
+            output vector from create_random_labeling()
+        matrix ndarray
+            gene x pathway matrix
+        c float 
+            probability of false negative pathway-gene association (0<=c<= 1)
+    '''
     tot = 0
     with tqdm() as p:
         while True:
@@ -250,7 +304,9 @@ def get_kernighan_lin_clusters(path, threshold, C):
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
-    labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+    #labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+    labeling = create_random_labeling(matrix, threshold)
+    print(labeling)
     run_KL(labeling, matrix, 0)
     frame = pd.DataFrame(labeling)
     frame['description'] = np.concatenate([gene_names, pathway_names])
