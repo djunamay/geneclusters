@@ -57,10 +57,12 @@ def test_compute_internal_cost():
     matrix = np.ascontiguousarray(mat.values.T)
     
     labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
-    cross_costs, partition1_indices, partition2_indices = get_cross_costs(labeling, 0, 1, matrix, 0)
+    A = np.where(labeling == 0)[0]
+    B = np.where(labeling == 1)[0]
+    cross_costs = get_cross_costs(labeling, A, B, matrix, 0)
     Ic = np.zeros(len(labeling), dtype = int)
-    compute_internal_cost(partition1_indices, labeling, 0, matrix, Ic)
-    compute_internal_cost(partition2_indices, labeling, 0, matrix, Ic)
+    compute_internal_cost(A, labeling, 0, matrix, Ic)
+    compute_internal_cost(B, labeling, 0, matrix, Ic)
     
     ground_truth_Ic = np.array([0, 1, 0, 1, 1, 0, 2, 1])
     assert_that(np.array_equal(Ic, ground_truth_Ic)).is_true()
@@ -76,10 +78,12 @@ def test_compute_external_cost():
     matrix = np.ascontiguousarray(mat.values.T)
     
     labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
-    cross_costs, partition1_indices, partition2_indices = get_cross_costs(labeling, 0, 1, matrix, 0)
+    A = np.where(labeling == 0)[0]
+    B = np.where(labeling == 1)[0]
+    cross_costs = get_cross_costs(labeling, A, B, matrix, 0)
 
     Ec = np.zeros(len(labeling), dtype = int)
-    compute_external_cost(partition1_indices, partition2_indices, cross_costs, Ec)
+    compute_external_cost(A, B, cross_costs, Ec)
     ground_truth_Ec = np.array([2, 1, 1, 1, 0, 3, 1, 1])
     assert_that(np.array_equal(Ec, ground_truth_Ec)).is_true()
 
@@ -93,16 +97,18 @@ def test_compute_cost_metrics():
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)  
     labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+    A = np.where(labeling == 0)[0]
+    B = np.where(labeling == 1)[0]
 
-    cross_costs, partition1_indices, partition2_indices, D = compute_cost_metrics(labeling, matrix, 0, 1, 0)
+    cross_costs, D = compute_cost_metrics(labeling, matrix, A, B, 0)
     cross_costs_ground = np.array([[0,0,1,1],[0,0,1,0],[0,0,1,0],[1,0,0,0]])
     partition1_indices_ground = np.array([0,1,2,7])
     partition2_indices_ground = np.array([3,4,5,6])
     D_ground = np.array([2,0,1,0,-1,3,-1,0])
     
     assert_that(np.array_equal(cross_costs, cross_costs_ground)).is_true()
-    assert_that(np.array_equal(partition1_indices, partition1_indices_ground)).is_true()
-    assert_that(np.array_equal(partition2_indices, partition2_indices)).is_true()
+    assert_that(np.array_equal(A, partition1_indices_ground)).is_true()
+    assert_that(np.array_equal(B, partition2_indices_ground)).is_true()
     assert_that(np.array_equal(D, D_ground)).is_true()
     
 def get_kernighan_lin_clusters():
