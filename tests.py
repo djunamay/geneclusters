@@ -45,8 +45,6 @@ def test_create_random_labeling():
             # if N is divisble by nclust, a single cluster size should exist
             assert_that(len(np.unique(uniques[1]))==1).is_true()
             
-def test_get_cross_costs():
-    pass
 
 def test_compute_internal_cost():
     """
@@ -84,3 +82,46 @@ def test_compute_external_cost():
     compute_external_cost(partition1_indices, partition2_indices, cross_costs, Ec)
     ground_truth_Ec = np.array([2, 1, 1, 1, 0, 3, 1, 1])
     assert_that(np.array_equal(Ec, ground_truth_Ec)).is_true()
+
+def test_compute_cost_metrics():
+    '''
+    Test function that computes all cost metrics
+    '''
+    path = './examples/test_dict.npy'
+    mat = get_gene_pathway_matrix(path)
+    pathway_names = mat.index
+    gene_names = mat.columns
+    matrix = np.ascontiguousarray(mat.values.T)  
+    labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+
+    cross_costs, partition1_indices, partition2_indices, D = compute_cost_metrics(labeling, matrix, 0, 1, 0)
+    cross_costs_ground = np.array([[0,0,1,1],[0,0,1,0],[0,0,1,0],[1,0,0,0]])
+    partition1_indices_ground = np.array([0,1,2,7])
+    partition2_indices_ground = np.array([3,4,5,6])
+    D_ground = np.array([2,0,1,0,-1,3,-1,0])
+    
+    assert_that(np.array_equal(cross_costs, cross_costs_ground)).is_true()
+    assert_that(np.array_equal(partition1_indices, partition1_indices_ground)).is_true()
+    assert_that(np.array_equal(partition2_indices, partition2_indices)).is_true()
+    assert_that(np.array_equal(D, D_ground)).is_true()
+    
+def get_kernighan_lin_clusters():
+    '''
+    Test function that returns clusters
+    '''
+    matrix = np.array([[1,0],[1,0],[0,1],[0,1]])
+    labeling = create_random_labeling(matrix, 3)
+    run_KL(labeling, matrix, 0)
+    gene_names = np.array(['G1','G2','G3','G4'])
+    pathway_names = np.array(['P1','P2'])
+    frame = pd.DataFrame(labeling)
+    frame['description'] = np.concatenate([gene_names, pathway_names])
+    frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
+
+    temp = frame[frame[0]==1]['description']
+    clust1 = set(['G1','G2','P1'])
+    assert_that(np.unique([x in clust1 for x in temp])[0]).is_true()
+
+    temp = frame[frame[0]==0]['description']
+    clust1 = set(['G3','G4','P2'])
+    assert_that(np.unique([x in clust1 for x in temp])[0]).is_true()

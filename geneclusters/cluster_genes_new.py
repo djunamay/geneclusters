@@ -136,7 +136,6 @@ def compute_external_cost(partition1_indices, partition2_indices, cross_costs, E
     Ec[partition1_indices] = np.sum(cross_costs, axis = 1)
     Ec[partition2_indices] = np.sum(cross_costs, axis = 0)
     
-### Is the external cost computed between A and B or between A and other?
 
 def compute_cost_metrics(labeling, matrix, partition1, partition2, c):
     '''
@@ -304,7 +303,6 @@ def get_kernighan_lin_clusters(path, threshold, C):
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
-    #labeling = np.array([0, 0, 0, 1, 1, 1, 1, 0])
     labeling = create_random_labeling(matrix, threshold)
     print(labeling)
     run_KL(labeling, matrix, 0)
