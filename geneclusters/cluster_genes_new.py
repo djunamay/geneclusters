@@ -4,6 +4,8 @@ from nltk import flatten
 from tqdm import tqdm
 import numpy.ma as ma
 from ipdb import set_trace
+import numba as nb
+
 def get_gene_pathway_matrix(path_to_dict):
     '''
     returns pandas dataframe of pathways x genes indicating which pathway-gene pairs are key-value pairs in the input dictionary 
@@ -43,6 +45,7 @@ def create_random_labeling(matrix, threshold):
     np.random.shuffle(labeling)
     return labeling
 
+@nb.njit()
 def compute_costs(i, j, c, matrix):
     '''
     Compute cost between node i and j
@@ -61,13 +64,14 @@ def compute_costs(i, j, c, matrix):
     '''
     x, y = matrix.shape
     if (i<x) & (j>=x):
-        return np.max((matrix[i,j-x], c))
+        return max((matrix[i,j-x], c))
     if (j<x) & (i>=x):
-        return np.max((matrix[j,i-x], c))
+        return max((matrix[j,i-x], c))
     if ((j<x) & (i<x)) | ((j>=x) & (i>=x)):
         return 0
 
-def get_cross_costs(labeling, partition1, partition2, matrix, c):
+@nb.njit()
+def get_cross_costs(labeling, partition1_indices, partition2_indices, matrix, c):
     '''
     Compute pairwise costs of nodes in partition A and nodes in partition B
     Args:
@@ -86,16 +90,17 @@ def get_cross_costs(labeling, partition1, partition2, matrix, c):
             len(partition1) x len(partition2) matrix, where entries represent edge weights for pairwise nodes in partition1 and partition2
         
     ''' 
-    partition1_indices = np.arange(len(labeling))[labeling==partition1]
-    partition2_indices = np.arange(len(labeling))[labeling==partition2]
+    #partition1_indices = np.arange(len(labeling))[labeling==partition1]
+    #partition2_indices = np.arange(len(labeling))[labeling==partition2]
     L1 = len(partition1_indices)
     L2 = len(partition2_indices)
     cross_costs = np.empty(shape=(L1, L2))
     for i in range(L1):
         for j in range(L2):
             cross_costs[i, j] = compute_costs(partition1_indices[i], partition2_indices[j], c, matrix)
-    return cross_costs, partition1_indices, partition2_indices
+    return cross_costs#, partition1_indices, partition2_indices
 
+@nb.njit()
 def compute_internal_cost(partition_indices, labeling, c, matrix, Ic):
     '''
     Compute internal cost for each node in partition A and save it to corresponding index in the Ic vector
@@ -117,7 +122,7 @@ def compute_internal_cost(partition_indices, labeling, c, matrix, Ic):
                 Ic[i] += compute_costs(i, j, c, matrix)
             else:
                 continue
-                
+@nb.njit()                
 def compute_external_cost(partition1_indices, partition2_indices, cross_costs, Ec):
     '''
     Compute external costs for each node in partitions A and B and save it to corresponding index in the Ec vector
@@ -136,8 +141,8 @@ def compute_external_cost(partition1_indices, partition2_indices, cross_costs, E
     Ec[partition1_indices] = np.sum(cross_costs, axis = 1)
     Ec[partition2_indices] = np.sum(cross_costs, axis = 0)
     
-
-def compute_cost_metrics(labeling, matrix, partition1, partition2, c):
+@nb.njit()
+def compute_cost_metrics(labeling, matrix, partition1_indices, partition2_indices, c):
     '''
     Compute the cost metrics for KL clustering
     Args:
@@ -155,17 +160,29 @@ def compute_cost_metrics(labeling, matrix, partition1, partition2, c):
         - pairwise costs between nodes in partition1 and partition 2
         - per-node externval vs internal cost (D)
     '''
-    cross_costs, partition1_indices, partition2_indices = get_cross_costs(labeling, partition1, partition2, matrix, c)
-    Ic = np.zeros(len(labeling), dtype = int)
+    cross_costs = get_cross_costs(labeling, partition1_indices, partition2_indices, matrix, c)
+    Ic = np.zeros_like(labeling)
     compute_internal_cost(partition1_indices, labeling, c, matrix, Ic)
     compute_internal_cost(partition2_indices, labeling, c, matrix, Ic)
 
-    Ec = np.zeros(len(labeling), dtype = int)
+    Ec = np.zeros_like(labeling)
     compute_external_cost(partition1_indices, partition2_indices, cross_costs, Ec)
 
     D = Ec-Ic
-    return cross_costs, partition1_indices, partition2_indices, D
+    return cross_costs, D#, partition1_indices, partition2_indices, D
 
+@nb.njit()
+def add_outer(cross_costs, D, partition1_indices, partition2_indices):
+    out = np.zeros_like(cross_costs)
+    A = D[partition1_indices]
+    B = D[partition2_indices]
+    for i in range(len(A)):
+        for j in range(len(B)):
+            out[i,j] = A[i]+B[j]
+    return out
+            
+#@nb.njit()
+@nb.njit()
 def kernighan_lin_step(labeling, matrix, partition1, partition2, c):
     '''
     Reassign labels between two partitions based on kernighan-lin algorithm
@@ -183,18 +200,23 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c):
     '''
     A = np.where(labeling == partition1)[0]
     B = np.where(labeling == partition2)[0]
-    iteration = np.min((len(A), len(B)))
+    if len(A)<=len(B):
+        L = A
+    else:
+        L = B
     
-    a_out = np.zeros(iteration)
-    b_out = np.zeros(iteration)
-    g_out = np.zeros(iteration)
+    a_out = np.zeros_like(L)
+    b_out = np.zeros_like(L)
+    g_out = np.zeros_like(L)
+    iteration = len(L)
 
-    labeling_mask = np.zeros(labeling.shape)
+    labeling_mask = np.zeros_like(labeling)
     labeling_temp = labeling.copy()
     
     for it in range(iteration):
-        cross_costs, partition1_indices, partition2_indices, D = compute_cost_metrics(labeling_temp, matrix, partition1, partition2, c)
-        pairwise_d_sums = np.add.outer(D[partition1_indices], D[partition2_indices])
+        cross_costs, D = compute_cost_metrics(labeling_temp, matrix, A, B, c)
+        #pairwise_d_sums = np.add.outer(D[partition1_indices], D[partition2_indices])
+        pairwise_d_sums = add_outer(cross_costs, D, A, B)
         g = pairwise_d_sums-2*cross_costs
 
         x, y = g.shape
@@ -202,28 +224,35 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c):
         i = g_max_temp // y
         j = g_max_temp % y
 
-        index1 = partition1_indices[i]
-        index2 = partition2_indices[j]
+        index1 = A[i]
+        index2 = B[j]
+        
+        A = A[A!=index1]
+        B = B[B!=index2]
 
         a_out[it] = index1
         b_out[it] = index2
         g_out[it] = g[i,j]
-
-        labeling_mask[index1] = 1
-        labeling_mask[index2] = 1
-        labeling_temp = ma.masked_array(labeling_temp, mask = labeling_mask)
+        
+        #labeling_temp[index1] = np.inf
+        #labeling_temp[index2] = np.inf
+        
+        #labeling_mask[index1] = 1
+        #labeling_mask[index2] = 1
+        #labeling_temp = ma.masked_array(labeling_temp, mask = labeling_mask)
 
     cumulative_sum = np.cumsum(g_out)
     k = np.argmax(cumulative_sum)
     gmax = cumulative_sum[k]
     if gmax > 0:
-        ra = a_out[:k+1].astype(int)
-        rb = b_out[:k+1].astype(int)
+        ra = a_out[:k+1]#.astype(int)
+        rb = b_out[:k+1]#.astype(int)
         labeling[ra], labeling[rb] = labeling[rb], labeling[ra]
         return gmax
     else:
         return 0
     
+@nb.njit()
 def full_kl_step(labeling, matrix, c):
     '''
     Apply kernighan-lin algorithm to all partition pairs
@@ -264,6 +293,7 @@ def evaluate_cut(matrix, labeling, c):
                     value += c
     return value
 
+#@nb.njit()
 def run_KL(labeling, matrix, c):
     '''
     Run kernighan-lin algorithm to cluster gene-pathway matrix into equally-sized partitions
