@@ -42,6 +42,7 @@ def create_random_labeling(matrix, threshold):
     num_clusters = np.ceil(N / threshold)
     new_threshold = N / num_clusters
     labeling = (np.arange(N) / new_threshold).astype('int')
+    np.random.seed(5)
     np.random.shuffle(labeling)
     return labeling
 
@@ -181,9 +182,15 @@ def add_outer(cross_costs, D, partition1_indices, partition2_indices):
             out[i,j] = A[i]+B[j]
     return out
             
-#@nb.njit()
 @nb.njit()
-def kernighan_lin_step(labeling, matrix, partition1, partition2, c):
+def discard_done_swaps(all_improvements, done_a, done_b):
+    for a in done_a:
+        all_improvements[a, :] = -np.inf
+    for b in done_b:
+        all_improvements[:, b] = -np.inf
+
+@nb.njit()
+def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified):
     '''
     Reassign labels between two partitions based on kernighan-lin algorithm
     Args:
@@ -213,47 +220,85 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c):
     labeling_mask = np.zeros_like(labeling)
     labeling_temp = labeling.copy()
     
+    if KL_modified:
+        done_i = []
+        done_j = []
+        
     for it in range(iteration):
+        #print('**')
+        #print(A)
+        #print(B)
         cross_costs, D = compute_cost_metrics(labeling_temp, matrix, A, B, c)
-        #pairwise_d_sums = np.add.outer(D[partition1_indices], D[partition2_indices])
         pairwise_d_sums = add_outer(cross_costs, D, A, B)
         g = pairwise_d_sums-2*cross_costs
-
+        #print(g.shape)
+        if KL_modified & it!=0:
+            #discard_done_swaps(g, done_i, done_j)
+            g[-1, :] = -np.inf
+            g[:, -1] = -np.inf
+            
         x, y = g.shape
         g_max_temp = np.argmax(g)
         i = g_max_temp // y
         j = g_max_temp % y
 
         index1 = A[i]
+        #if index1 in set(a_out):
+        #    print('oops')
+        #    break
         index2 = B[j]
+        #if index2 in set(b_out):
+        #    print('oops')
+        #    break
         
-        A = A[A!=index1]
-        B = B[B!=index2]
-
         a_out[it] = index1
         b_out[it] = index2
-        g_out[it] = g[i,j]
+        g_out[it] = g[i,j]   
+        if KL_modified:
+            done_i.append(i)
+            done_j.append(j)
+            #print(i)
+            #print(index1)
+            #print(j)
+            #print(index2)
+            #labeling_temp[index1], labeling_temp[index2] = labeling_temp[index2], labeling_temp[index1]
+            #A = np.where(labeling_temp == partition1)[0]
+            #print(A)
+            #B = np.where(labeling_temp == partition2)[0]
+            #print(B)
+            A = A[A!=index1]
+            A = np.append(A, index2)
+            B = B[B!=index2]
+            B = np.append(B, index1)
+        else:
+            A = A[A!=index1]
+            B = B[B!=index2]
         
-        #labeling_temp[index1] = np.inf
-        #labeling_temp[index2] = np.inf
+        #labeling_temp[index1] = max(labeling)+1
+        #labeling_temp[index2] = max(labeling)+1
         
         #labeling_mask[index1] = 1
         #labeling_mask[index2] = 1
         #labeling_temp = ma.masked_array(labeling_temp, mask = labeling_mask)
-
+        # I remove the best nodes from the next iteration right away (which is how the algorithm works no?)
+        # G exchanges the labels of the best nodes prior to computing the next cost metric, but then excludes those nodes before computing the argmax
+        #labeling_temp[index1], labeling_temp[index2] = labeling_temp[index2], labeling_temp[index1]
+        
     cumulative_sum = np.cumsum(g_out)
     k = np.argmax(cumulative_sum)
     gmax = cumulative_sum[k]
     if gmax > 0:
-        ra = a_out[:k+1]#.astype(int)
-        rb = b_out[:k+1]#.astype(int)
-        labeling[ra], labeling[rb] = labeling[rb], labeling[ra]
+        #set_trace()
+        for i in range(k+1):
+            ra = a_out[i]#.astype(int)
+            rb = b_out[i]#.astype(int)
+            labeling[ra], labeling[rb] = labeling[rb], labeling[ra]
         return gmax
     else:
         return 0
     
-@nb.njit()
-def full_kl_step(labeling, matrix, c):
+#@nb.njit()
+def full_kl_step(labeling, matrix, c, KL_modified):
     '''
     Apply kernighan-lin algorithm to all partition pairs
         labeling 1D ndarray
@@ -264,11 +309,13 @@ def full_kl_step(labeling, matrix, c):
             probability of false negative pathway-gene association (0<=c<= 1)
     '''
     num_clusters = len(set(labeling))
+    np.random.seed(5)
     order = np.random.permutation(num_clusters ** 2)
+    print(order)
     impr = 0
     for o in order:
         cluster_1, cluster_2 = o // num_clusters, o % num_clusters
-        impr+=kernighan_lin_step(labeling, matrix, cluster_1, cluster_2, c)
+        impr+=kernighan_lin_step(labeling, matrix, cluster_1, cluster_2, c, KL_modified)
     return impr
     
 
@@ -294,7 +341,7 @@ def evaluate_cut(matrix, labeling, c):
     return value
 
 #@nb.njit()
-def run_KL(labeling, matrix, c):
+def run_KL(labeling, matrix, c, KL_modified):
     '''
     Run kernighan-lin algorithm to cluster gene-pathway matrix into equally-sized partitions
     Args:
@@ -308,7 +355,7 @@ def run_KL(labeling, matrix, c):
     tot = 0
     with tqdm() as p:
         while True:
-            impr = full_kl_step(labeling, matrix, c)
+            impr = full_kl_step(labeling, matrix, c, KL_modified)
             tot += impr
             p.set_postfix({
                     'tot_impr': tot,
@@ -319,7 +366,7 @@ def run_KL(labeling, matrix, c):
             if impr==0:
                 break
                 
-def get_kernighan_lin_clusters(path, threshold, C):
+def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True):
     '''
     returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
     Args:
@@ -330,12 +377,13 @@ def get_kernighan_lin_clusters(path, threshold, C):
         C float
     '''
     mat = get_gene_pathway_matrix(path)
+    print('test15')
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
     labeling = create_random_labeling(matrix, threshold)
     print(labeling)
-    run_KL(labeling, matrix, 0)
+    run_KL(labeling, matrix, 0, KL_modified)
     frame = pd.DataFrame(labeling)
     frame['description'] = np.concatenate([gene_names, pathway_names])
     frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
