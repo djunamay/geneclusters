@@ -42,7 +42,6 @@ def create_random_labeling(matrix, threshold):
     num_clusters = np.ceil(N / threshold)
     new_threshold = N / num_clusters
     labeling = (np.arange(N) / new_threshold).astype('int')
-    np.random.seed(5)
     np.random.shuffle(labeling)
     return labeling
 
@@ -232,7 +231,7 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified)
         pairwise_d_sums = add_outer(cross_costs, D, A, B)
         g = pairwise_d_sums-2*cross_costs
         #print(g.shape)
-        if KL_modified & it!=0:
+        if KL_modified and it!=0:
             #discard_done_swaps(g, done_i, done_j)
             g[-1, :] = -np.inf
             g[:, -1] = -np.inf
@@ -311,11 +310,14 @@ def full_kl_step(labeling, matrix, c, KL_modified):
     num_clusters = len(set(labeling))
     np.random.seed(5)
     order = np.random.permutation(num_clusters ** 2)
-    print(order)
+    #print(order)
     impr = 0
     for o in order:
         cluster_1, cluster_2 = o // num_clusters, o % num_clusters
         impr+=kernighan_lin_step(labeling, matrix, cluster_1, cluster_2, c, KL_modified)
+        #i = kernighan_lin_step(labeling, matrix, cluster_1, cluster_2, c, KL_modified)
+        #print(i)
+        #impr += i
     return impr
     
 
@@ -377,12 +379,12 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True):
         C float
     '''
     mat = get_gene_pathway_matrix(path)
-    print('test15')
+    #print('test15')
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
     labeling = create_random_labeling(matrix, threshold)
-    print(labeling)
+    #print(labeling)
     run_KL(labeling, matrix, 0, KL_modified)
     frame = pd.DataFrame(labeling)
     frame['description'] = np.concatenate([gene_names, pathway_names])
