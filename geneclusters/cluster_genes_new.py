@@ -222,7 +222,7 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified)
     if KL_modified:
         done_i = []
         done_j = []
-        
+    
     for it in range(iteration):
         #print('**')
         #print(A)
@@ -233,8 +233,10 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified)
         #print(g.shape)
         if KL_modified and it!=0:
             #discard_done_swaps(g, done_i, done_j)
-            g[-1, :] = -np.inf
-            g[:, -1] = -np.inf
+            start = g.shape[0]-it
+            end = g.shape[0]-it+1
+            g[start:end, :] = -np.inf
+            g[:, start:end] = -np.inf
             
         x, y = g.shape
         g_max_temp = np.argmax(g)
