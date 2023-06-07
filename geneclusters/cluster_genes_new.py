@@ -90,15 +90,14 @@ def get_cross_costs(labeling, partition1_indices, partition2_indices, matrix, c)
             len(partition1) x len(partition2) matrix, where entries represent edge weights for pairwise nodes in partition1 and partition2
         
     ''' 
-    #partition1_indices = np.arange(len(labeling))[labeling==partition1]
-    #partition2_indices = np.arange(len(labeling))[labeling==partition2]
+
     L1 = len(partition1_indices)
     L2 = len(partition2_indices)
     cross_costs = np.empty(shape=(L1, L2))
     for i in range(L1):
         for j in range(L2):
             cross_costs[i, j] = compute_costs(partition1_indices[i], partition2_indices[j], c, matrix)
-    return cross_costs#, partition1_indices, partition2_indices
+    return cross_costs
 
 @nb.njit()
 def compute_internal_cost(partition_indices, labeling, c, matrix, Ic):
@@ -169,7 +168,7 @@ def compute_cost_metrics(labeling, matrix, partition1_indices, partition2_indice
     compute_external_cost(partition1_indices, partition2_indices, cross_costs, Ec)
 
     D = Ec-Ic
-    return cross_costs, D#, partition1_indices, partition2_indices, D
+    return cross_costs, D
 
 @nb.njit()
 def add_outer(cross_costs, D, partition1_indices, partition2_indices):
@@ -218,21 +217,19 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified)
 
     labeling_mask = np.zeros_like(labeling)
     labeling_temp = labeling.copy()
+
     
     if KL_modified:
         done_i = []
         done_j = []
     
     for it in range(iteration):
-        #print('**')
-        #print(A)
-        #print(B)
+
         cross_costs, D = compute_cost_metrics(labeling_temp, matrix, A, B, c)
         pairwise_d_sums = add_outer(cross_costs, D, A, B)
         g = pairwise_d_sums-2*cross_costs
-        #print(g.shape)
+        
         if KL_modified and it!=0:
-            #discard_done_swaps(g, done_i, done_j)
             start = g.shape[0]-it
             end = g.shape[0]-it+1
             g[start:end, :] = -np.inf
@@ -242,15 +239,9 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified)
         g_max_temp = np.argmax(g)
         i = g_max_temp // y
         j = g_max_temp % y
-
         index1 = A[i]
-        #if index1 in set(a_out):
-        #    print('oops')
-        #    break
+
         index2 = B[j]
-        #if index2 in set(b_out):
-        #    print('oops')
-        #    break
         
         a_out[it] = index1
         b_out[it] = index2
@@ -258,15 +249,7 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified)
         if KL_modified:
             done_i.append(i)
             done_j.append(j)
-            #print(i)
-            #print(index1)
-            #print(j)
-            #print(index2)
-            #labeling_temp[index1], labeling_temp[index2] = labeling_temp[index2], labeling_temp[index1]
-            #A = np.where(labeling_temp == partition1)[0]
-            #print(A)
-            #B = np.where(labeling_temp == partition2)[0]
-            #print(B)
+
             A = A[A!=index1]
             A = np.append(A, index2)
             B = B[B!=index2]
@@ -275,30 +258,18 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified)
             A = A[A!=index1]
             B = B[B!=index2]
         
-        #labeling_temp[index1] = max(labeling)+1
-        #labeling_temp[index2] = max(labeling)+1
-        
-        #labeling_mask[index1] = 1
-        #labeling_mask[index2] = 1
-        #labeling_temp = ma.masked_array(labeling_temp, mask = labeling_mask)
-        # I remove the best nodes from the next iteration right away (which is how the algorithm works no?)
-        # G exchanges the labels of the best nodes prior to computing the next cost metric, but then excludes those nodes before computing the argmax
-        #labeling_temp[index1], labeling_temp[index2] = labeling_temp[index2], labeling_temp[index1]
-        
     cumulative_sum = np.cumsum(g_out)
     k = np.argmax(cumulative_sum)
     gmax = cumulative_sum[k]
     if gmax > 0:
-        #set_trace()
         for i in range(k+1):
-            ra = a_out[i]#.astype(int)
-            rb = b_out[i]#.astype(int)
+            ra = a_out[i]
+            rb = b_out[i]
             labeling[ra], labeling[rb] = labeling[rb], labeling[ra]
         return gmax
     else:
         return 0
     
-#@nb.njit()
 def full_kl_step(labeling, matrix, c, KL_modified):
     '''
     Apply kernighan-lin algorithm to all partition pairs
@@ -312,14 +283,10 @@ def full_kl_step(labeling, matrix, c, KL_modified):
     num_clusters = len(set(labeling))
     np.random.seed(5)
     order = np.random.permutation(num_clusters ** 2)
-    #print(order)
     impr = 0
     for o in order:
         cluster_1, cluster_2 = o // num_clusters, o % num_clusters
         impr+=kernighan_lin_step(labeling, matrix, cluster_1, cluster_2, c, KL_modified)
-        #i = kernighan_lin_step(labeling, matrix, cluster_1, cluster_2, c, KL_modified)
-        #print(i)
-        #impr += i
     return impr
     
 
@@ -344,7 +311,6 @@ def evaluate_cut(matrix, labeling, c):
                     value += c
     return value
 
-#@nb.njit()
 def run_KL(labeling, matrix, c, KL_modified):
     '''
     Run kernighan-lin algorithm to cluster gene-pathway matrix into equally-sized partitions
@@ -381,12 +347,10 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True):
         C float
     '''
     mat = get_gene_pathway_matrix(path)
-    #print('test15')
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
     labeling = create_random_labeling(matrix, threshold)
-    #print(labeling)
     run_KL(labeling, matrix, 0, KL_modified)
     frame = pd.DataFrame(labeling)
     frame['description'] = np.concatenate([gene_names, pathway_names])
