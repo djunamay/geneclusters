@@ -377,7 +377,7 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True):
         C float
     '''
     mat = get_gene_pathway_matrix(path)
-    print('test15')
+    print('test17')
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
