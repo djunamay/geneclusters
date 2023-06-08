@@ -28,6 +28,7 @@ def get_gene_pathway_matrix(path_to_dict):
     df.index = path_names
     return df
 
+@nb.njit()
 def get_full_matrix_from_bipartite(matrix):
     m1 = np.concatenate((np.zeros(shape=(matrix.shape[0],matrix.shape[0])), matrix), axis = 1)
     m2 = np.concatenate((matrix.T, (np.zeros(shape=(matrix.shape[1],matrix.shape[1])))), axis = 1)
@@ -44,8 +45,9 @@ def invert_weights(matrix, matrix_out):
                 matrix_out[i,j] = val
     return matrix_out
 
+#@nb.njit()
 def create_nonrandom_labeling(matrix, centrality, unweighted):
-    print('NR labels')
+    #print('NR labels')
     full_matrix = get_full_matrix_from_bipartite(matrix)
     index_genes = (np.sum(full_matrix, axis = 0)>centrality)
     if not unweighted:
@@ -56,6 +58,7 @@ def create_nonrandom_labeling(matrix, centrality, unweighted):
     assignment = assign_cluster_based_on_proba(proba)
     return assignment
 
+@nb.njit()
 def distance_to_probability(dist_matrix):
     inv_df = 1/(dist_matrix+10e-10)
     df = inv_df/np.sum(inv_df, axis = 0)
