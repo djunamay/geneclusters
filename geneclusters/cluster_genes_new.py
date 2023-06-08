@@ -35,33 +35,48 @@ def get_full_matrix_from_bipartite(matrix):
     return np.concatenate((m2, m1), axis = 0)
 
 @nb.njit()
-def invert_weights(matrix, matrix_out):
+def invert_weights(matrix, c):
     for i in range(matrix.shape[0]):
         for j in range(matrix.shape[1]):
-            val = matrix[i,j]
+            val = max(matrix[i,j], c)
             if val!=0:
-                matrix_out[i,j] = 1/val
+                matrix[i,j] = 1/val
             elif val==0:
-                matrix_out[i,j] = val
-    return matrix_out
+                matrix[i,j] = val
 
 #@nb.njit()
-def create_nonrandom_labeling(matrix, centrality, unweighted):
+def create_nonrandom_labeling(matrix, centrality, unweighted, c):
     #print('NR labels')
-    full_matrix = get_full_matrix_from_bipartite(matrix)
-    index_genes = (np.sum(full_matrix, axis = 0)>centrality)
+    if c>0:
+        unweighted=False
     if not unweighted:
-        full_matrix = invert_weights(full_matrix, np.empty_like(matrix))
+        matrix_temp = matrix.copy()
+        invert_weights(matrix_temp, c)
+        full_matrix = get_full_matrix_from_bipartite(matrix_temp)
+    if unweighted:
+        full_matrix = get_full_matrix_from_bipartite(matrix)
+    index_genes = np.sum(full_matrix, axis = 0)
+    index_genes = np.argsort(-index_genes)[:centrality]
     graph = csr_matrix(full_matrix)
-    dist_matrix = shortest_path(csgraph=graph,directed=False, indices=np.where(index_genes)[0], return_predecessors=False, unweighted = unweighted)
+    if unweighted:
+        graph = graph.ceil()
+    dist_matrix = shortest_path(csgraph=graph,directed=False, indices=index_genes, return_predecessors=False, unweighted = unweighted)
     proba = distance_to_probability(dist_matrix)
     assignment = assign_cluster_based_on_proba(proba)
     return assignment
 
 @nb.njit()
+def sigmoid(x):
+    return 1/(1 + np.exp(-x))
+
+@nb.njit()
 def distance_to_probability(dist_matrix):
     inv_df = 1/(dist_matrix+10e-10)
     df = inv_df/np.sum(inv_df, axis = 0)
+    print('test')
+    #temp = dist_matrix+10e-10  
+    #inv_df = sigmoid(-np.log2(temp))
+    #df = inv_df/np.sum(inv_df, axis = 0)
     return df
 
 def assign_cluster_based_on_proba(probas):
@@ -400,7 +415,7 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labe
     if random_labels:
         labeling = create_random_labeling(matrix, threshold)
     else:
-        labeling = create_nonrandom_labeling(matrix, threshold, unweighted)
+        labeling = create_nonrandom_labeling(matrix, threshold, unweighted, C)
     run_KL(labeling, matrix, 0, KL_modified)
     frame = pd.DataFrame(labeling)
     frame['description'] = np.concatenate([gene_names, pathway_names])
