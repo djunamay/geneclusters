@@ -45,8 +45,10 @@ def invert_weights(matrix, c):
                 matrix[i,j] = val
 
 #@nb.njit()
-def create_nonrandom_labeling(matrix, centrality, unweighted, c):
+def create_nonrandom_labeling(matrix, centrality, unweighted, c, seed):
     #print('NR labels')
+    np.random.seed(seed)
+    
     if c>0:
         unweighted=False
     if not unweighted:
@@ -73,7 +75,6 @@ def sigmoid(x):
 def distance_to_probability(dist_matrix):
     inv_df = 1/(dist_matrix+10e-10)
     df = inv_df/np.sum(inv_df, axis = 0)
-    print('test')
     #temp = dist_matrix+10e-10  
     #inv_df = sigmoid(-np.log2(temp))
     #df = inv_df/np.sum(inv_df, axis = 0)
@@ -82,12 +83,11 @@ def distance_to_probability(dist_matrix):
 def assign_cluster_based_on_proba(probas):
     assignment = []
     for node in range(probas.shape[1]):
-        #np.random.seed(5)
         x = np.random.choice(range(probas.shape[0]), size = 1, p = probas[:,node])[0]
         assignment.append(x)
     return np.array(assignment)
 
-def create_random_labeling(matrix, threshold):
+def create_random_labeling(matrix, threshold, seed):
     '''
     returns ndarray grouping pathways and genes into clusters based on threshold
     Args:
@@ -99,6 +99,7 @@ def create_random_labeling(matrix, threshold):
         labeling 1D ndarray
             random cluster partition labels of length N-genes + N-pathways
     '''
+    np.random.seed(seed)
     N = np.sum(matrix.shape)
     num_clusters = np.ceil(N / threshold)
     new_threshold = N / num_clusters
@@ -342,7 +343,6 @@ def full_kl_step(labeling, matrix, c, KL_modified):
             probability of false negative pathway-gene association (0<=c<= 1)
     '''
     num_clusters = len(set(labeling))
-    np.random.seed(5)
     order = np.random.permutation(num_clusters ** 2)
     impr = 0
     for o in order:
@@ -397,7 +397,7 @@ def run_KL(labeling, matrix, c, KL_modified):
             if impr==0:
                 break
                 
-def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labels=True, unweighted=True):
+def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labels=True, unweighted=True, seed=5):
     '''
     returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
     Args:
@@ -407,17 +407,16 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labe
             number of genes per cluster. Min = 1, Max = total number of genes and pathways
         C float
     '''
-    print('get')
     mat = get_gene_pathway_matrix(path)
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
     if random_labels:
-        labeling = create_random_labeling(matrix, threshold)
+        labeling = create_random_labeling(matrix, threshold, seed)
     else:
-        labeling = create_nonrandom_labeling(matrix, threshold, unweighted, C)
+        labeling = create_nonrandom_labeling(matrix, threshold, unweighted, C, seed)
     run_KL(labeling, matrix, 0, KL_modified)
     frame = pd.DataFrame(labeling)
     frame['description'] = np.concatenate([gene_names, pathway_names])
     frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
-    return frame
+    return frame, evaluate_cut(matrix, labeling, C)
