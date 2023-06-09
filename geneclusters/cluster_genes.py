@@ -252,4 +252,8 @@ def get_kernighan_lin_clusters(path, threshold, C):
     frame = pd.DataFrame(results[1])
     frame['description'] = np.concatenate([gene_names, pathway_names])
     frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
+<<<<<<< HEAD
     return frame
+=======
+    return frame
+>>>>>>> 216f60130f7345bb2c28caf12a8269c52fca58a9
