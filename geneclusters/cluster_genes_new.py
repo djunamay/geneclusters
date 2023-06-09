@@ -404,8 +404,16 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labe
         path str
             path to pathway-gene dictionary as ndarray
         threshold int
-            number of genes per cluster. Min = 1, Max = total number of genes and pathways
+            if random_labels is True, gives number of genes per cluster. Min = 1, Max = total number of genes and pathways
+            if random_labels is False, gives number of desired clusters. Min = 1, Max = total number of genes and pathways
         C float
+            probability of false negative pathway-gene association (0<=c<= 1)
+        KL_modified bool
+            whether to run the modified KL algorithm 
+        random_labels
+            whether to randomize initiating labels or assign based on node centrality
+        unweighted bool
+            whether to consider weights when computing the shortest path between nodes, only considiered if random_labels is False
     '''
     mat = get_gene_pathway_matrix(path)
     pathway_names = mat.index
@@ -420,3 +428,7 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labe
     frame['description'] = np.concatenate([gene_names, pathway_names])
     frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
     return frame, evaluate_cut(matrix, labeling, C)
+
+def get_scores(path, C, KL_modified, random_labels, unweighted, seed, thresh):
+    o1, o2 = get_kernighan_lin_clusters(path, thresh, C, KL_modified, random_labels, unweighted, seed)
+    return np.array(o1[0]), o2
