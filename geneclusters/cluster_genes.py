@@ -9,6 +9,8 @@ from functools import partial
 import numba as nb
 from .prepare_inputs import get_gene_pathway_matrix
 from pdb import set_trace
+import ipdb
+
 
 @nb.njit()
 def evaluate_cut(matrix, labeling, c):
@@ -24,21 +26,24 @@ def evaluate_cut(matrix, labeling, c):
             
 def create_random_labeling(matrix, threshold):
     '''
-    returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
+    **
+    returns ndarray grouping pathways and genes into clusters based on threshold
     Args:
         matrix ndarray
             gene x pathway matrix
-        threshold float
-            clustering resolution; inversely proportional to number of clusters to uniformly partition genes and pathways into
+        threshold int
+            number of genes per cluster. Min = 1, Max = total number of genes and pathways
     '''
     N = np.sum(matrix.shape)
     num_clusters = np.ceil(N / threshold)
     new_threshold = N / num_clusters
     labeling = (np.arange(N) / new_threshold).astype('int')
+    np.random.seed(5)
+
     np.random.shuffle(labeling)
     return labeling
 
-#@nb.njit()
+@nb.njit()
 def get_cost(matrix, i, j, c):
     '''
     returns 
@@ -64,9 +69,8 @@ def get_cost(matrix, i, j, c):
     
     return max(matrix[i, j], c) # if connection is 0, return the probability of a false negative
 
-#@nb.njit()
+@nb.njit()
 def cost_to_other(matrix, source, others, c):
-    set_trace()
     costs = np.zeros_like(source)
     for i, a in enumerate(source):
         for b in others:
@@ -141,17 +145,22 @@ def kernighan_lin_step(matrix, labeling, cluster_1, cluster_2, c):
     
     for _ in range(min(len(A), len(B))):
         all_improvements, A, B = get_pairwise_improvements(matrix, temp_labeling, cluster_1, cluster_2, c)
+        #print(all_improvements.shape)
         discard_done_swaps(all_improvements, done_a, done_b)
-        
         ix = np.argmax(all_improvements)
+        #print(ix)
         a, b = ix // all_improvements.shape[1], ix % all_improvements.shape[1]
         done_a.append(a)
         done_b.append(b)
         ra = A[a]
+        #print(ra)
         rb = B[b]
+        #print(rb)
+        #print('***')
         
         swaps.append((ra, rb))
         g += all_improvements[a, b]
+        #print(all_improvements[a, b])
         gs.append(g)
         temp_labeling[ra], temp_labeling[rb] = temp_labeling[rb], temp_labeling[ra]
             
@@ -160,39 +169,39 @@ def kernighan_lin_step(matrix, labeling, cluster_1, cluster_2, c):
         for i in range(num_steps + 1):
             ra, rb = swaps[i]
             labeling[ra], labeling[rb] = labeling[rb], labeling[ra]
-
         return gs[num_steps]
     else:
         return 0
     
-@nb.njit()
+#@nb.njit()
 def full_kl_step(matrix, labeling, c):
     '''
     returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
     Args:
         matrix ndarray
             gene x pathway matrix
-        threshold float
-            clustering resolution; inversely proportional to number of clusters to uniformly partition genes and pathways into
+        threshold int
+            number of genes per cluster. Min = 1, Max = total number of genes and pathways
     '''
     num_clusters = len(set(labeling))
+    np.random.seed(5)
     order = np.random.permutation(num_clusters ** 2)
-    
+    print(order)
     impr = 0
     for o in order:
-        cluster_1, cluster_2 = o // num_clusters, o % num_clusters
+        cluster_1, cluster_2 = o // num_clusters, o % num_clusters # // floor division, % modulus
         impr += kernighan_lin_step(matrix, labeling, cluster_1, cluster_2, c)
     
     return impr
         
 def kernighan_lin(matrix, labeling, c):
     '''
-    returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
+    iteratively performs kernighan lin steps
     Args:
         matrix ndarray
             gene x pathway matrix
-        threshold float
-            clustering resolution; inversely proportional to number of clusters to uniformly partition genes and pathways into
+        threshold int
+            number of genes per cluster. Min = 1, Max = total number of genes and pathways
     '''
     tot = 0
     with tqdm() as p:
@@ -210,7 +219,17 @@ def kernighan_lin(matrix, labeling, c):
     return tot
     
 def score_for_thres(matrix, thres, c):
+    '''
+    returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
+    Args:
+        path str
+            path to pathway-gene dictionary as ndarray
+        threshold int
+            number of genes per cluster. Min = 1, Max = total number of genes and pathways
+        C float
+    '''
     labeling = create_random_labeling(matrix, thres)
+    print(labeling)
     kernighan_lin(matrix, labeling, c)
     return evaluate_cut(matrix, labeling, c), labeling
 
@@ -220,10 +239,12 @@ def get_kernighan_lin_clusters(path, threshold, C):
     Args:
         path str
             path to pathway-gene dictionary as ndarray
-        threshold float
+        threshold int
+            number of genes per cluster. Min = 1, Max = total number of genes and pathways
         C float
     '''
     mat = get_gene_pathway_matrix(path)
+    print('test15')
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
@@ -232,3 +253,5 @@ def get_kernighan_lin_clusters(path, threshold, C):
     frame['description'] = np.concatenate([gene_names, pathway_names])
     frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
     return frame
+
+  
