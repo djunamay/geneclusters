@@ -97,7 +97,7 @@ results = process_map(partial(get_scores,path,C,KL_modified,random_labels,unweig
     4it [00:06,  1.67s/it, tot_impr=1414, last_impr=0, loss=425]
     4it [00:06,  1.67s/it, tot_impr=1435, last_impr=0, loss=423]
     4it [00:06,  1.69s/it, tot_impr=1454, last_impr=0, loss=393]
-   ...
+    ...
 
 4. Select labels from the best loss
 
