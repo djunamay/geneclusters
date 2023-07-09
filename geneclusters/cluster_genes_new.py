@@ -397,7 +397,7 @@ def run_KL(labeling, matrix, c, KL_modified):
             if impr==0:
                 break
                 
-def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labels=True, unweighted=True, seed=5):
+def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, unweighted=True, seed=5):
     '''
     returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
     Args:
@@ -410,8 +410,6 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labe
             probability of false negative pathway-gene association (0<=c<= 1)
         KL_modified bool
             whether to run the modified KL algorithm 
-        random_labels
-            whether to randomize initiating labels or assign based on node centrality
         unweighted bool
             whether to consider weights when computing the shortest path between nodes, only considiered if random_labels is False
     '''
@@ -419,16 +417,16 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labe
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
-    if random_labels:
-        labeling = create_random_labeling(matrix, threshold, seed)
-    else:
-        labeling = create_nonrandom_labeling(matrix, threshold, unweighted, C, seed)
+    #if random_labels:
+    labeling = create_random_labeling(matrix, threshold, seed)
+    #else:
+        #labeling = create_nonrandom_labeling(matrix, threshold, unweighted, C, seed)
     run_KL(labeling, matrix, 0, KL_modified)
     frame = pd.DataFrame(labeling)
     frame['description'] = np.concatenate([gene_names, pathway_names])
     frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
     return frame, evaluate_cut(matrix, labeling, C)
 
-def get_scores(path, C, KL_modified, random_labels, unweighted, seed, thresh):
-    o1, o2 = get_kernighan_lin_clusters(path, thresh, C, KL_modified, random_labels, unweighted, seed)
+def get_scores(path, C, KL_modified, unweighted, seed, thresh):
+    o1, o2 = get_kernighan_lin_clusters(path, thresh, C, KL_modified, unweighted, seed)
     return np.array(o1[0]), o2
