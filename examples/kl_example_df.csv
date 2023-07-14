@@ -1,0 +1,1087 @@
+,cluster,description,is_gene
+0,13,A4GNT,True
+1,16,AADAT,True
+2,16,AANAT,True
+3,17,AARS,True
+4,11,AARS2,True
+5,15,ABAT,True
+6,12,ABHD12,True
+7,5,ABHD5,True
+8,12,ABHD6,True
+9,11,ACAA1,True
+10,11,ACAA2,True
+11,15,ACAD8,True
+12,20,ACADL,True
+13,15,ACADSB,True
+14,4,ACAT1,True
+15,4,ACAT2,True
+16,4,ACER1,True
+17,4,ACER2,True
+18,16,ACMSD,True
+19,14,ACO2,True
+20,9,ACOT2,True
+21,9,ACOT4,True
+22,9,ACOT7,True
+23,9,ACOT8,True
+24,9,ACOX1,True
+25,11,ACOX2,True
+26,9,ACSBG1,True
+27,9,ACSBG2,True
+28,9,ACSL1,True
+29,9,ACSL3,True
+30,9,ACSL4,True
+31,9,ACSL5,True
+32,9,ACSL6,True
+33,11,ACSM1,True
+34,11,ACSM3,True
+35,11,ACSM4,True
+36,11,ACSM5,True
+37,11,ACSM6,True
+38,17,ACSS1,True
+39,17,ACSS2,True
+40,17,ACSS3,True
+41,18,ADA,True
+42,17,ADH1B,True
+43,17,ADH4,True
+44,17,ADH6,True
+45,3,ADI1,True
+46,2,ADK,True
+47,2,ADSL,True
+48,2,ADSS,True
+49,2,ADSSL1,True
+50,16,AFMID,True
+51,11,AGL,True
+52,5,AGPAT1,True
+53,5,AGPAT2,True
+54,5,AGPAT3,True
+55,5,AGPAT4,True
+56,5,AGPAT5,True
+57,5,AGPAT6,True
+58,5,AGPAT9,True
+59,15,AHCY,True
+60,2,AK1,True
+61,2,AK2,True
+62,2,AK3,True
+63,2,AK4,True
+64,2,AK5,True
+65,2,AK7,True
+66,2,AK8,True
+67,16,AKR1A1,True
+68,8,AKR1B1,True
+69,8,AKR1B10,True
+70,12,AKR1C1,True
+71,12,AKR1C2,True
+72,8,AKR1C3,True
+73,12,AKR1C4,True
+74,11,AKR1D1,True
+75,4,ALAD,True
+76,4,ALAS1,True
+77,4,ALAS2,True
+78,3,ALDH1A1,True
+79,3,ALDH1A2,True
+80,3,ALDH1A3,True
+81,17,ALDH1B1,True
+82,20,ALDH1L1,True
+83,20,ALDH1L2,True
+84,17,ALDH2,True
+85,17,ALDH3A1,True
+86,17,ALDH3A2,True
+87,17,ALDH3B1,True
+88,17,ALDH3B2,True
+89,15,ALDH5A1,True
+90,15,ALDH6A1,True
+91,16,ALDH7A1,True
+92,14,ALDOA,True
+93,14,ALDOB,True
+94,14,ALDOC,True
+95,11,ALG1,True
+96,11,ALG13,True
+97,11,ALG3,True
+98,11,ALG5,True
+99,11,ALG6,True
+100,11,ALG8,True
+101,18,ALOX5,True
+102,19,ALPI,True
+103,11,AMACR,True
+104,3,AMD1,True
+105,18,AMDHD1,True
+106,19,ANPEP,True
+107,17,AOC3,True
+108,8,AOX1,True
+109,20,APIP,True
+110,2,APRT,True
+111,20,ARG1,True
+112,20,ARSB,True
+113,4,ASAH1,True
+114,4,ASAH2,True
+115,4,ASAH2B,True
+116,20,ASL,True
+117,16,ASMT,True
+118,20,ASS1,True
+119,2,ATIC,True
+120,2,ATP5A1,True
+121,2,ATP5B,True
+122,2,ATP5C1,True
+123,2,ATP5D,True
+124,2,ATP5E,True
+125,2,ATP5EP2,True
+126,2,ATP5F1,True
+127,2,ATP5H,True
+128,2,ATP5I,True
+129,2,ATP5J2,True
+130,2,ATP5L,True
+131,2,ATP5L2,True
+132,2,ATP5S,True
+133,2,ATP6,True
+134,2,ATP8,True
+135,15,AUH,True
+136,1,B3GALT6,True
+137,1,B3GAT1,True
+138,1,B3GAT2,True
+139,1,B3GAT3,True
+140,0,B3GNT1,True
+141,21,B3GNT3,True
+142,0,B4GALT1,True
+143,0,B4GALT2,True
+144,0,B4GALT3,True
+145,1,B4GALT7,True
+146,11,BAAT,True
+147,15,BCAT1,True
+148,15,BCAT2,True
+149,15,BCKDHA,True
+150,15,BCKDHB,True
+151,16,BDH1,True
+152,4,BDH2,True
+153,16,BHMT,True
+154,14,BPGM,True
+155,12,C12ORF5,True
+156,21,C1GALT1,True
+157,6,CAD,True
+158,9,CARS,True
+159,9,CARS2,True
+160,17,CAT,True
+161,16,CBS,True
+162,19,CCBL1,True
+163,19,CCBL2,True
+164,0,CDA,True
+165,16,CDC34,True
+166,7,CDIPT,True
+167,0,CDK11A,True
+168,12,CDO1,True
+169,5,CDS1,True
+170,5,CDS2,True
+171,12,CEL,True
+172,18,CEPT1,True
+173,12,CERS1,True
+174,3,CES1,True
+175,3,CES2,True
+176,3,CES4A,True
+177,3,CES5A,True
+178,16,CHDH,True
+179,18,CHKA,True
+180,18,CHKB,True
+181,18,CHPT1,True
+182,1,CHST11,True
+183,1,CHST12,True
+184,1,CHST13,True
+185,1,CHST14,True
+186,1,CHST15,True
+187,1,CHST2,True
+188,1,CHST3,True
+189,1,CHST7,True
+190,17,CKB,True
+191,17,CKM,True
+192,17,CKMT1A,True
+193,17,CKMT1B,True
+194,17,CKMT2,True
+195,6,CMPK1,True
+196,6,CMPK2,True
+197,12,CNDP2,True
+198,21,COASY,True
+199,17,COMT,True
+200,18,COQ2,True
+201,18,COQ3,True
+202,18,COQ5,True
+203,18,COQ6,True
+204,18,COQ7,True
+205,4,CPOX,True
+206,20,CPS1,True
+207,21,CPT1A,True
+208,21,CPT1B,True
+209,21,CPT1C,True
+210,21,CPT2,True
+211,21,CRAT,True
+212,16,CRYM,True
+213,1,CS,True
+214,1,CSGALNACT1,True
+215,1,CSGALNACT2,True
+216,16,CTH,True
+217,6,CTPS1,True
+218,6,CTPS2,True
+219,8,CYP11A1,True
+220,8,CYP11B1,True
+221,8,CYP11B2,True
+222,8,CYP17A1,True
+223,8,CYP19A1,True
+224,8,CYP1A2,True
+225,8,CYP1B1,True
+226,8,CYP21A2,True
+227,11,CYP27A1,True
+228,8,CYP2A6,True
+229,8,CYP2B6,True
+230,8,CYP2C19,True
+231,8,CYP2E1,True
+232,8,CYP2G1P,True
+233,11,CYP2R1,True
+234,8,CYP2S1,True
+235,8,CYP2U1,True
+236,8,CYP4X1,True
+237,0,CYP51A1,True
+238,11,CYP7A1,True
+239,11,CYP8B1,True
+240,14,DAK,True
+241,1,DARS,True
+242,9,DARS2,True
+243,15,DBT,True
+244,6,DCK,True
+245,12,DCTD,True
+246,16,DDC,True
+247,15,DEGS2,True
+248,17,DERA,True
+249,5,DGAT1,True
+250,5,DGAT2,True
+251,6,DGUOK,True
+252,0,DHCR24,True
+253,0,DHCR7,True
+254,3,DHRS3,True
+255,3,DHRS4,True
+256,3,DHRS9,True
+257,16,DHTKD1,True
+258,11,DIO1,True
+259,8,DIO2,True
+260,12,DLAT,True
+261,15,DLD,True
+262,1,DLST,True
+263,16,DMGDH,True
+264,11,DPAGT1,True
+265,18,DPEP1,True
+266,18,DPEP2,True
+267,11,DPM1,True
+268,11,DPM2,True
+269,11,DPM3,True
+270,0,DPYD,True
+271,0,DPYS,True
+272,1,DSE,True
+273,6,DTYMK,True
+274,6,DUT,True
+275,12,EARS2,True
+276,0,EBP,True
+277,15,ECHS1,True
+278,12,ECI1,True
+279,9,EHHADH,True
+280,9,ELOVL1,True
+281,11,ELOVL5,True
+282,9,ELOVL6,True
+283,14,ENO1,True
+284,14,ENO2,True
+285,14,ENO3,True
+286,3,ENOPH1,True
+287,21,ENPP7,True
+288,9,EPRS,True
+289,17,EPT1,True
+290,17,ETNK1,True
+291,17,ETNK2,True
+292,13,EXT1,True
+293,13,EXT2,True
+294,13,EXTL1,True
+295,13,EXTL2,True
+296,13,EXTL3,True
+297,11,FADS1,True
+298,11,FADS2,True
+299,2,FADS6,True
+300,0,FAH,True
+301,9,FARS2,True
+302,12,FARSA,True
+303,9,FARSB,True
+304,9,FASN,True
+305,14,FBP1,True
+306,14,FBP2,True
+307,0,FDFT1,True
+308,0,FDPS,True
+309,4,FECH,True
+310,1,FH,True
+311,11,FIG4,True
+312,8,FMO1,True
+313,8,FMO2,True
+314,8,FMO3,True
+315,8,FMO4,True
+316,8,FMO5,True
+317,18,FMO6P,True
+318,16,FPGS,True
+319,18,FTCD,True
+320,0,FUT9,True
+321,14,G6PC,True
+322,14,G6PC2,True
+323,14,G6PC3,True
+324,6,G6PD,True
+325,15,GAD1,True
+326,15,GAD2,True
+327,19,GALE,True
+328,19,GALK1,True
+329,19,GALM,True
+330,20,GALNS,True
+331,21,GALNT1,True
+332,21,GALNT10,True
+333,21,GALNT11,True
+334,21,GALNT12,True
+335,21,GALNT13,True
+336,21,GALNT14,True
+337,11,GALNT15,True
+338,21,GALNT16,True
+339,21,GALNT18,True
+340,21,GALNT2,True
+341,21,GALNT3,True
+342,21,GALNT4,True
+343,21,GALNT5,True
+344,21,GALNT6,True
+345,21,GALNT7,True
+346,21,GALNT8,True
+347,21,GALNT9,True
+348,21,GALNTL6,True
+349,19,GALT,True
+350,14,GAPDH,True
+351,14,GAPDHS,True
+352,9,GARS,True
+353,2,GART,True
+354,4,GBE1,True
+355,14,GCK,True
+356,12,GCLC,True
+357,12,GCLM,True
+358,21,GCNT1,True
+359,0,GCNT2,True
+360,0,GCNT3,True
+361,21,GCNT4,True
+362,21,GCNT7,True
+363,18,GDA,True
+364,19,GFPT1,True
+365,19,GFPT2,True
+366,12,GGCT,True
+367,19,GGH,True
+368,0,GGPS1,True
+369,12,GGT1,True
+370,18,GGT3P,True
+371,18,GGT5,True
+372,5,GK,True
+373,5,GK2,True
+374,5,GK3P,True
+375,5,GK5,True
+376,13,GLCE,True
+377,15,GLUD1,True
+378,15,GLUD2,True
+379,15,GLUL,True
+380,3,GMPPA,True
+381,3,GMPPB,True
+382,2,GMPS,True
+383,19,GNPDA1,True
+384,19,GNPDA2,True
+385,19,GNPNAT1,True
+386,15,GOT1,True
+387,16,GOT2,True
+388,5,GPAM,True
+389,5,GPAT2,True
+390,5,GPD2,True
+391,14,GPI,True
+392,20,GPX1,True
+393,20,GPX2,True
+394,20,GPX3,True
+395,20,GPX4,True
+396,5,GPX5,True
+397,5,GPX6,True
+398,20,GPX7,True
+399,5,GPX8,True
+400,20,GSR,True
+401,12,GSS,True
+402,19,GSTA1,True
+403,19,GSTA2,True
+404,19,GSTA3,True
+405,19,GSTA4,True
+406,19,GSTA5,True
+407,19,GSTK1,True
+408,19,GSTM1,True
+409,19,GSTM2,True
+410,19,GSTM3,True
+411,19,GSTM4,True
+412,19,GSTM5,True
+413,19,GSTO2,True
+414,19,GSTP1,True
+415,19,GSTT1,True
+416,19,GSTT2,True
+417,19,GSTTP1,True
+418,19,GSTZ1,True
+419,6,GUK1,True
+420,4,GYG1,True
+421,4,GYG2,True
+422,4,GYS1,True
+423,4,GYS2,True
+424,16,HAAO,True
+425,9,HADH,True
+426,15,HADHA,True
+427,20,HADHB,True
+428,18,HAL,True
+429,9,HARS,True
+430,9,HARS2,True
+431,20,HEXA,True
+432,20,HEXB,True
+433,0,HGD,True
+434,15,HIBADH,True
+435,15,HIBCH,True
+436,14,HK1,True
+437,14,HK2,True
+438,14,HK3,True
+439,19,HKDC1,True
+440,4,HMBS,True
+441,4,HMGCL,True
+442,15,HMGCLL1,True
+443,0,HMGCR,True
+444,4,HMGCS1,True
+445,4,HMGCS2,True
+446,0,HPD,True
+447,1,HPGDS,True
+448,2,HPRT1,True
+449,13,HS2ST1,True
+450,13,HS3ST1,True
+451,13,HS3ST2,True
+452,13,HS3ST3A1,True
+453,13,HS3ST3B1,True
+454,13,HS3ST4,True
+455,13,HS3ST5,True
+456,13,HS3ST6,True
+457,13,HS6ST1,True
+458,13,HS6ST2,True
+459,13,HS6ST3,True
+460,8,HSD17B1,True
+461,15,HSD17B10,True
+462,8,HSD17B11,True
+463,8,HSD17B3,True
+464,9,HSD17B4,True
+465,0,HSD17B7,True
+466,8,HSD3B1,True
+467,8,HSD3B2,True
+468,11,HSD3B7,True
+469,20,HYAL1,True
+470,20,HYAL4,True
+471,11,IARS,True
+472,9,IARS2,True
+473,1,IDH3A,True
+474,1,IDH3B,True
+475,1,IDH3G,True
+476,4,IDI1,True
+477,4,IDI2,True
+478,16,IDO1,True
+479,16,IDO2,True
+480,20,IDS,True
+481,20,IDUA,True
+482,20,IMPA1,True
+483,10,IMPA2,True
+484,10,IMPAD1,True
+485,2,IMPDH1,True
+486,6,IMPDH2,True
+487,8,INMT,True
+488,10,INPP1,True
+489,18,INPP4A,True
+490,11,INPP4B,True
+491,10,INPP5A,True
+492,10,INPP5B,True
+493,10,INPP5D,True
+494,18,INPP5E,True
+495,10,INPP5F,True
+496,10,INPP5J,True
+497,10,INPP5K,True
+498,10,INPPL1,True
+499,12,IP6K1,True
+500,12,IP6K2,True
+501,12,IP6K3,True
+502,10,IPMK,True
+503,10,IPPK,True
+504,0,ITGA2B,True
+505,10,ITPK1,True
+506,10,ITPKA,True
+507,10,ITPKB,True
+508,10,ITPKC,True
+509,15,IVD,True
+510,9,KARS,True
+511,15,KDSR,True
+512,11,KHK,True
+513,16,KMO,True
+514,16,KYNU,True
+515,20,LARS,True
+516,20,LARS2,True
+517,0,LBR,True
+518,5,LCLAT1,True
+519,12,LIPC,True
+520,12,LIPE,True
+521,12,LIPF,True
+522,12,LIPG,True
+523,5,LPCAT3,True
+524,5,LPCAT4,True
+525,5,LPPR2,True
+526,5,LPPR3,True
+527,5,LPPR4,True
+528,3,LRAT,True
+529,17,LRTOMT,True
+530,0,LSS,True
+531,18,LTA4H,True
+532,18,LTC4S,True
+533,17,MAOA,True
+534,17,MAOB,True
+535,18,MARS,True
+536,20,MARS2,True
+537,3,MAT1A,True
+538,16,MAT2A,True
+539,3,MAT2B,True
+540,5,MBOAT1,True
+541,5,MBOAT2,True
+542,5,MBOAT7,True
+543,15,MCCC1,True
+544,15,MCCC2,True
+545,15,MCEE,True
+546,14,MDH1,True
+547,14,MDH2,True
+548,12,MGLL,True
+549,19,MGST1,True
+550,19,MGST2,True
+551,19,MGST3,True
+552,10,MINPP1,True
+553,5,MOGAT1,True
+554,5,MOGAT3,True
+555,3,MPI,True
+556,3,MRI1,True
+557,0,MSMO1,True
+558,3,MTAP,True
+559,18,MTHFD1,True
+560,20,MTHFD1L,True
+561,20,MTHFD2,True
+562,20,MTHFD2L,True
+563,20,MTHFR,True
+564,20,MTHFS,True
+565,7,MTMR14,True
+566,7,MTMR3,True
+567,20,MTR,True
+568,15,MUT,True
+569,4,MVD,True
+570,4,MVK,True
+571,16,NADSYN1,True
+572,9,NARS,True
+573,9,NARS2,True
+574,13,NDST1,True
+575,13,NDST2,True
+576,13,NDST3,True
+577,13,NDST4,True
+578,18,NEDD4L,True
+579,6,NME1,True
+580,6,NME2,True
+581,6,NME2P1,True
+582,6,NME3,True
+583,6,NME4,True
+584,6,NME5,True
+585,6,NME6,True
+586,6,NME7,True
+587,16,NMNAT1,True
+588,16,NMNAT2,True
+589,16,NMNAT3,True
+590,20,NOS1,True
+591,20,NOS2,True
+592,20,NOS3,True
+593,0,NSDHL,True
+594,18,NT5C1A,True
+595,18,NT5C1B,True
+596,18,NT5C2,True
+597,18,NT5C3A,True
+598,18,NT5E,True
+599,6,NTPCR,True
+600,7,OC90,True
+601,10,OCRL,True
+602,1,OGDH,True
+603,12,OPLAH,True
+604,20,OTC,True
+605,9,OXSM,True
+606,2,PADI1,True
+607,2,PADI2,True
+608,2,PADI3,True
+609,2,PADI4,True
+610,2,PADI6,True
+611,2,PAICS,True
+612,21,PANK1,True
+613,21,PANK2,True
+614,21,PANK3,True
+615,17,PAOX,True
+616,20,PARS2,True
+617,14,PC,True
+618,15,PCCA,True
+619,15,PCCB,True
+620,14,PCK1,True
+621,18,PCYT1A,True
+622,18,PCYT1B,True
+623,17,PCYT2,True
+624,12,PDHA1,True
+625,12,PDHA2,True
+626,14,PDHB,True
+627,18,PDSS1,True
+628,18,PDSS2,True
+629,19,PDXK,True
+630,19,PDXP,True
+631,2,PFAS,True
+632,12,PFKFB1,True
+633,12,PFKFB2,True
+634,12,PFKFB3,True
+635,12,PFKFB4,True
+636,14,PFKL,True
+637,14,PFKM,True
+638,14,PFKP,True
+639,14,PGAM1,True
+640,14,PGAM2,True
+641,6,PGD,True
+642,14,PGK1,True
+643,14,PGK2,True
+644,6,PGLS,True
+645,14,PGM1,True
+646,14,PGM2,True
+647,19,PGM3,True
+648,5,PHGDH,True
+649,19,PHOSPHO2,True
+650,10,PI4K2A,True
+651,10,PI4K2B,True
+652,10,PI4KA,True
+653,10,PI4KB,True
+654,10,PIK3C2A,True
+655,10,PIK3C2B,True
+656,11,PIK3C2G,True
+657,10,PIK3C3,True
+658,10,PIK3CA,True
+659,10,PIK3CB,True
+660,2,PIK3CD,True
+661,10,PIK3CG,True
+662,10,PIK3R1,True
+663,10,PIK3R2,True
+664,10,PIK3R3,True
+665,10,PIK3R4,True
+666,10,PIK3R5,True
+667,10,PIK3R6,True
+668,10,PIKFYVE,True
+669,7,PIP4K2A,True
+670,10,PIP4K2B,True
+671,7,PIP4K2C,True
+672,10,PIP5K1A,True
+673,7,PIP5K1B,True
+674,7,PIP5K1C,True
+675,10,PIP5KL1,True
+676,16,PIPOX,True
+677,14,PKLR,True
+678,14,PKM,True
+679,7,PLA2G10,True
+680,7,PLA2G12A,True
+681,7,PLA2G16,True
+682,7,PLA2G1B,True
+683,7,PLA2G2A,True
+684,7,PLA2G2D,True
+685,7,PLA2G2E,True
+686,7,PLA2G2F,True
+687,7,PLA2G3,True
+688,7,PLA2G4A,True
+689,7,PLA2G4B,True
+690,7,PLA2G4C,True
+691,7,PLA2G4D,True
+692,7,PLA2G4E,True
+693,7,PLA2G4F,True
+694,7,PLA2G5,True
+695,7,PLA2G6,True
+696,7,PLB1,True
+697,7,PLCB1,True
+698,7,PLCB2,True
+699,7,PLCB3,True
+700,7,PLCB4,True
+701,7,PLCD1,True
+702,7,PLCD3,True
+703,7,PLCD4,True
+704,7,PLCE1,True
+705,7,PLCG1,True
+706,7,PLCG2,True
+707,7,PLCH1,True
+708,7,PLCH2,True
+709,7,PLCZ1,True
+710,7,PLD1,True
+711,2,PLD2,True
+712,7,PLD3,True
+713,7,PLD4,True
+714,7,PLD6,True
+715,3,PMM1,True
+716,3,PMM2,True
+717,18,PMPCA,True
+718,4,PMVK,True
+719,12,PNLIP,True
+720,12,PNLIPRP2,True
+721,12,PNLIPRP3,True
+722,17,PNMT,True
+723,18,PNP,True
+724,12,PNPLA2,True
+725,12,PNPLA3,True
+726,12,PNPLA4,True
+727,7,PNPLA8,True
+728,19,PNPO,True
+729,8,POR,True
+730,5,PPAP2A,True
+731,5,PPAP2B,True
+732,5,PPAP2C,True
+733,5,PPAPDC1A,True
+734,2,PPAT,True
+735,21,PPCDC,True
+736,21,PPCS,True
+737,12,PPIP5K1,True
+738,12,PPIP5K2,True
+739,4,PPOX,True
+740,5,PSAT1,True
+741,5,PSPH,True
+742,3,PSTK,True
+743,10,PTEN,True
+744,1,PTGDS,True
+745,1,PTGES,True
+746,1,PTGES2,True
+747,1,PTGES3,True
+748,1,PTGIS,True
+749,4,PTGR1,True
+750,1,PTGS1,True
+751,1,PTGS2,True
+752,16,PYCR1,True
+753,14,PYGB,True
+754,14,PYGL,True
+755,14,PYGM,True
+756,20,QARS,True
+757,16,QPRT,True
+758,9,RARS,True
+759,11,RARS2,True
+760,3,RBP1,True
+761,3,RBP2,True
+762,3,RBP3,True
+763,3,RBP4,True
+764,3,RBP5,True
+765,3,RDH10,True
+766,3,RDH11,True
+767,3,RDH12,True
+768,3,RDH16,True
+769,3,RDH5,True
+770,3,RDH8,True
+771,3,RLBP1,True
+772,13,RNF216,True
+773,6,RPE,True
+774,3,RPE65,True
+775,6,RPIA,True
+776,9,RPP14,True
+777,6,RRM1,True
+778,6,RRM2,True
+779,6,RRM2B,True
+780,10,SACM1L,True
+781,21,SAMD8,True
+782,16,SARDH,True
+783,3,SARS,True
+784,9,SARS2,True
+785,17,SAT1,True
+786,17,SAT2,True
+787,0,SC5D,True
+788,2,SCD,True
+789,2,SCD5,True
+790,9,SCP2,True
+791,1,SDHA,True
+792,1,SDHB,True
+793,1,SDHC,True
+794,1,SDHD,True
+795,3,SDR16C5,True
+796,15,SDS,True
+797,15,SDSL,True
+798,3,SEPHS1,True
+799,3,SEPHS2,True
+800,3,SEPSECS,True
+801,21,SGMS1,True
+802,21,SGMS2,True
+803,4,SGPP1,True
+804,4,SGPP2,True
+805,16,SHMT1,True
+806,16,SHMT2,True
+807,14,SI,True
+808,9,SLC27A2,True
+809,11,SLC27A5,True
+810,17,SMOX,True
+811,21,SMPD1,True
+812,21,SMPD2,True
+813,21,SMPD3,True
+814,21,SMPD4,True
+815,5,SOD1,True
+816,5,SOD2,True
+817,5,SOD3,True
+818,20,SPAM1,True
+819,4,SPHK1,True
+820,4,SPHK2,True
+821,15,SPTLC1,True
+822,15,SPTLC2,True
+823,15,SPTLC3,True
+824,15,SPTSSA,True
+825,0,SQLE,True
+826,8,SRD5A1,True
+827,8,SRD5A2,True
+828,3,SRM,True
+829,5,SRR,True
+830,21,ST3GAL1,True
+831,21,ST3GAL2,True
+832,0,ST3GAL3,True
+833,21,ST3GAL4,True
+834,0,ST6GAL1,True
+835,0,ST6GAL2,True
+836,0,ST8SIA2,True
+837,1,SUCLA2,True
+838,1,SUCLG1,True
+839,14,SUCLG2,True
+840,8,SULT1A1,True
+841,8,SULT1A2,True
+842,17,SULT1A3,True
+843,15,SUOX,True
+844,10,SYNJ1,True
+845,10,SYNJ2,True
+846,6,TALDO1,True
+847,9,TARS,True
+848,9,TARS2,True
+849,9,TARSL2,True
+850,0,TAT,True
+851,1,TBXAS1,True
+852,16,TDO2,True
+853,6,TK1,True
+854,6,TK2,True
+855,6,TKT,True
+856,0,TM7SF2,True
+857,7,TMEM55A,True
+858,7,TMEM55B,True
+859,16,TPH1,True
+860,16,TPH2,True
+861,14,TPI1,True
+862,11,TPTE2,True
+863,4,TRPT1,True
+864,4,TSEN15,True
+865,4,TSEN2,True
+866,4,TSEN34,True
+867,4,TSEN54,True
+868,6,TYMS,True
+869,19,UAP1,True
+870,13,UBA1,True
+871,11,UBA3,True
+872,13,UBA5,True
+873,13,UBA6,True
+874,18,UBA7,True
+875,20,UBE2A,True
+876,13,UBE2B,True
+877,20,UBE2C,True
+878,11,UBE2D1,True
+879,1,UBE2D2,True
+880,13,UBE2D3,True
+881,13,UBE2D4,True
+882,17,UBE2E1,True
+883,17,UBE2E2,True
+884,13,UBE2E3,True
+885,13,UBE2G1,True
+886,13,UBE2G2,True
+887,13,UBE2H,True
+888,13,UBE2I,True
+889,13,UBE2J1,True
+890,13,UBE2J2,True
+891,13,UBE2K,True
+892,13,UBE2L3,True
+893,11,UBE2L6,True
+894,13,UBE2M,True
+895,11,UBE2N,True
+896,17,UBE2NL,True
+897,19,UBE2O,True
+898,13,UBE2Q1,True
+899,13,UBE2Q2,True
+900,0,UBE2QL1,True
+901,0,UBE2R2,True
+902,13,UBE2S,True
+903,19,UBE2T,True
+904,11,UBE2U,True
+905,13,UBE2V1,True
+906,19,UBE2V2,True
+907,13,UBE2W,True
+908,13,UBE2Z,True
+909,13,UBR1,True
+910,13,UEVLD,True
+911,4,UGP2,True
+912,8,UGT1A4,True
+913,8,UGT1A8,True
+914,8,UGT2B11,True
+915,6,UMPS,True
+916,0,UPB1,True
+917,0,UPP1,True
+918,0,UPP2,True
+919,18,UROC1,True
+920,4,UROD,True
+921,4,UROS,True
+922,1,UST,True
+923,11,VARS,True
+924,9,VARS2,True
+925,5,VPS29,True
+926,9,WARS,True
+927,0,WARS2,True
+928,21,WBSCR17,True
+929,18,XDH,True
+930,1,XYLT1,True
+931,1,XYLT2,True
+932,18,YARS,True
+933,20,YARS2,True
+934,17,creatine-phosphate biosynthesis Homo sapiens PWY-6158,False
+935,21,mitochondrial L-carnitine shuttle Homo sapiens PWY-6111,False
+936,19,pyridoxal 5'-phosphate salvage Homo sapiens PLPSAL-PWY,False
+937,13,protein ubiquitylation Homo sapiens PWY-7511,False
+938,2,protein citrullination Homo sapiens PWY-4921,False
+939,12,inositol pyrophosphates biosynthesis Homo sapiens PWY-6369,False
+940,10,1D-myo-inositol hexakisphosphate biosynthesis II (mammalian) Homo sapiens PWY-6362,False
+941,10,"D-myo-inositol (1,3,4)-trisphosphate biosynthesis Homo sapiens PWY-6364",False
+942,10,"superpathway of D-myo-inositol (1,4,5)-trisphosphate metabolism Homo sapiens PWY-6358",False
+943,10,"D-myo-inositol (1,4,5)-trisphosphate degradation Homo sapiens PWY-6363",False
+944,10,3-phosphoinositide degradation Homo sapiens PWY-6368,False
+945,10,superpathway of inositol phosphate compounds Homo sapiens PWY-6371,False
+946,10,3-phosphoinositide biosynthesis Homo sapiens PWY-6352,False
+947,7,"D-myo-inositol (1,4,5)-trisphosphate biosynthesis Homo sapiens PWY-6351",False
+948,7,D-myo-inositol-5-phosphate metabolism Homo sapiens PWY-6367,False
+949,7,phospholipases Homo sapiens LIPASYN-PWY,False
+950,0,superpathway of cholesterol biosynthesis Homo sapiens PWY66-5,False
+951,0,cholesterol biosynthesis III (via desmosterol) Homo sapiens PWY66-4,False
+952,0,cholesterol biosynthesis I Homo sapiens PWY66-341,False
+953,0,"cholesterol biosynthesis II (via 24,25-dihydrolanosterol) Homo sapiens PWY66-3",False
+954,0,zymosterol biosynthesis Homo sapiens PWY-6074,False
+955,4,ketogenesis Homo sapiens PWY66-367,False
+956,4,mevalonate pathway Homo sapiens PWY-922,False
+957,4,superpathway of geranylgeranyldiphosphate biosynthesis I (via mevalonate) Homo sapiens PWY-5910,False
+958,3,GDP-mannose biosynthesis Homo sapiens PWY-5659,False
+959,1,TCA cycle Homo sapiens PWY66-398,False
+960,14,superpathway of conversion of glucose to acetyl CoA and entry into the TCA cycle Homo sapiens PWY66-407,False
+961,14,glycolysis Homo sapiens PWY66-400,False
+962,14,gluconeogenesis Homo sapiens PWY66-399,False
+963,14,sucrose degradation Homo sapiens PWY66-373,False
+964,14,GDP-glucose biosynthesis II Homo sapiens PWY-5661-1,False
+965,4,glycogen biosynthesis Homo sapiens PWY-5067,False
+966,14,glycogenolysis Homo sapiens PWY-5941,False
+967,19,D-galactose degradation V (Leloir pathway) Homo sapiens PWY66-422,False
+968,19,UDP-N-acetyl-D-glucosamine biosynthesis II Homo sapiens UDPNACETYLGALSYN-PWY,False
+969,19,UDP-N-acetyl-D-galactosamine biosynthesis II Homo sapiens PWY-5514,False
+970,3,methionine salvage cycle III Homo sapiens PWY-7527,False
+971,16,cysteine biosynthesis Homo sapiens PWY-6292,False
+972,12,pyruvate decarboxylation to acetyl CoA Homo sapiens PYRUVDEHYD-PWY,False
+973,15,superpathway of methionine degradation Homo sapiens PWY-5328,False
+974,15,2-oxobutanoate degradation Homo sapiens PWY-5130,False
+975,15,threonine degradation Homo sapiens PWY66-428,False
+976,15,leucine degradation Homo sapiens LEU-DEG2-PWY,False
+977,15,isoleucine degradation Homo sapiens ILEUDEG-PWY,False
+978,15,valine degradation Homo sapiens VALDEG-PWY,False
+979,15,GABA shunt Homo sapiens GLUDEG-I-PWY,False
+980,20,glutathione redox reactions I Homo sapiens PWY-4081,False
+981,5,reactive oxygen species degradation Homo sapiens DETOX1-PWY-1,False
+982,9,palmitate biosynthesis Homo sapiens PWY-5994,False
+983,2,oleate biosynthesis Homo sapiens PWY-5996,False
+984,9,stearate biosynthesis Homo sapiens PWY-5972,False
+985,9,fatty acid &beta;-oxidation Homo sapiens FAO-PWY,False
+986,9,fatty acid &beta;-oxidation (peroxisome) Homo sapiens PWY66-391,False
+987,9,fatty acid activation Homo sapiens PWY-5143,False
+988,9,&gamma;-linolenate biosynthesis Homo sapiens PWY-6000,False
+989,11,icosapentaenoate biosynthesis II (metazoa) Homo sapiens PWY-7049,False
+990,11,"bile acid biosynthesis, neutral pathway Homo sapiens PWY-6061",False
+991,12,allopregnanolone biosynthesis Homo sapiens PWY-7455,False
+992,8,androgen biosynthesis Homo sapiens PWY66-378,False
+993,8,superpathway of steroid hormone biosynthesis Homo sapiens PWY-7305,False
+994,8,estradiol biosynthesis I Homo sapiens PWY66-380,False
+995,16,superpathway of tryptophan utilization Homo sapiens PWY66-401,False
+996,8,superpathway of melatonin degradation Homo sapiens PWY-6402,False
+997,8,melatonin degradation I Homo sapiens PWY-6398,False
+998,8,nicotine degradation IV Homo sapiens PWY66-201,False
+999,8,nicotine degradation III Homo sapiens PWY66-221,False
+1000,8,bupropion degradation Homo sapiens PWY66-241,False
+1001,8,acetone degradation I (to methylglyoxal) Homo sapiens PWY-5451,False
+1002,8,thyroid hormone metabolism II (via conjugation and/or degradation) Homo sapiens PWY-6261,False
+1003,17,spermine and spermidine degradation I Homo sapiens PWY-6117,False
+1004,17,2'-deoxy-&alpha;-D-ribose 1-phosphate degradation Homo sapiens PWY-7180,False
+1005,17,putrescine degradation III Homo sapiens PWY-0,False
+1006,17,serotonin degradation Homo sapiens PWY-6313,False
+1007,17,noradrenaline and adrenaline degradation Homo sapiens PWY-6342,False
+1008,17,dopamine degradation Homo sapiens PWY6666-2,False
+1009,17,ethanol degradation II Homo sapiens PWY66-21,False
+1010,17,ethanol degradation IV Homo sapiens PWY66-162,False
+1011,17,oxidative ethanol degradation III Homo sapiens PWY66-161,False
+1012,16,serotonin and melatonin biosynthesis Homo sapiens PWY-6030,False
+1013,16,NAD biosynthesis from 2-amino-3-carboxymuconate semialdehyde Homo sapiens PWY-5653,False
+1014,16,NAD de novo biosynthesis Homo sapiens NADSYN-PWY,False
+1015,16,tryptophan degradation to 2-amino-3-carboxymuconate semialdehyde Homo sapiens PWY-5651,False
+1016,16,tryptophan degradation Homo sapiens TRYPTOPHAN-DEGRADATION-1,False
+1017,16,L-kynurenine degradation Homo sapiens PWY-6309,False
+1018,16,lysine degradation II (pipecolate pathway) Homo sapiens PWY66-425,False
+1019,16,superpathway of choline degradation to L-serine Homo sapiens PWY66-414,False
+1020,16,glycine betaine degradation Homo sapiens PWY-3661-1,False
+1021,16,folate polyglutamylation Homo sapiens PWY-2161,False
+1022,20,folate transformations I Homo sapiens PWY-2201,False
+1023,5,serine and glycine biosynthesis Homo sapiens SER-GLYSYN-PWY,False
+1024,18,histidine degradation Homo sapiens PWY-5030,False
+1025,2,adenosine ribonucleotides de novo biosynthesis Homo sapiens PWY-7219,False
+1026,2,superpathway of purine nucleotide salvage Homo sapiens PWY66-409,False
+1027,2,purine nucleotides de novo biosynthesis Homo sapiens PWY-841,False
+1028,6,purine deoxyribonucleosides salvage Homo sapiens PWY-7224,False
+1029,6,guanosine ribonucleotides de novo biosynthesis Homo sapiens PWY-7221,False
+1030,6,guanosine nucleotides de novo biosynthesis Homo sapiens PWY-7228,False
+1031,6,adenosine deoxyribonucleotides de novo biosynthesis Homo sapiens PWY-7227,False
+1032,6,guanosine deoxyribonucleotides de novo biosynthesis Homo sapiens PWY-7226,False
+1033,6,pyrimidine deoxyribonucleotides biosynthesis from CTP Homo sapiens PWY-7210,False
+1034,6,pyrimidine deoxyribonucleotides de novo biosynthesis Homo sapiens PWY-7184,False
+1035,6,superpathway of pyrimidine deoxyribonucleotides de novo biosynthesis Homo sapiens PWY-7211,False
+1036,6,superpathway of pyrimidine ribonucleotides de novo biosynthesis Homo sapiens PWY0-162,False
+1037,6,UTP and CTP de novo biosynthesis Homo sapiens PWY-7176,False
+1038,6,CMP phosphorylation Homo sapiens PWY-7205,False
+1039,6,pyrimidine deoxyribonucleotide phosphorylation Homo sapiens PWY-7197,False
+1040,6,superpathway of pyrimidine deoxyribonucleoside salvage Homo sapiens PWY-7200,False
+1041,6,pyrimidine deoxyribonucleosides salvage Homo sapiens PWY-7199,False
+1042,0,pyrimidine ribonucleosides degradation Homo sapiens PWY-7209,False
+1043,12,triacylglycerol degradation Homo sapiens LIPAS-PWY,False
+1044,3,retinol biosynthesis Homo sapiens PWY-6857,False
+1045,3,the visual cycle I (vertebrates) Homo sapiens PWY-6861,False
+1046,3,retinoate biosynthesis I Homo sapiens PWY-6872,False
+1047,18,urate biosynthesis/inosine 5'-phosphate degradation Homo sapiens PWY-5695,False
+1048,18,purine nucleotides degradation Homo sapiens PWY-6353,False
+1049,18,adenosine nucleotides degradation Homo sapiens SALVADEHYPOX-PWY,False
+1050,0,tyrosine degradation Homo sapiens TYRFUMCAT-PWY,False
+1051,19,glutathione-mediated detoxification Homo sapiens PWY-4061,False
+1052,19,4-hydroxy-2-nonenal detoxification Homo sapiens PWY-7112,False
+1053,21,sphingomyelin metabolism/ceramide salvage Homo sapiens PWY3DJ-11281,False
+1054,4,sphingosine and sphingosine-1-phosphate metabolism Homo sapiens PWY3DJ-11470,False
+1055,12,&gamma;-glutamyl cycle Homo sapiens PWY-4041,False
+1056,18,leukotriene biosynthesis Homo sapiens PWY66-375,False
+1057,1,C20 prostanoid biosynthesis Homo sapiens PWY66-374,False
+1058,15,ceramide de novo biosynthesis Homo sapiens PWY3DJ-12,False
+1059,20,dermatan sulfate degradation (metazoa) Homo sapiens PWY-6576,False
+1060,20,chondroitin sulfate degradation (metazoa) Homo sapiens PWY-6573,False
+1061,21,coenzyme A biosynthesis Homo sapiens COA-PWY-1,False
+1062,9,tRNA charging Homo sapiens TRNA-CHARGING-PWY,False
+1063,3,selenocysteine biosynthesis Homo sapiens PWY-6281,False
+1064,4,tRNA splicing Homo sapiens PWY-6689,False
+1065,11,dolichyl-diphosphooligosaccharide biosynthesis Homo sapiens MANNOSYL-CHITO-DOLICHOL-BIOSYNTHESIS,False
+1066,13,heparan sulfate biosynthesis (late stages) Homo sapiens PWY-6558,False
+1067,13,heparan sulfate biosynthesis Homo sapiens PWY-6564,False
+1068,1,glycoaminoglycan-protein linkage region biosynthesis Homo sapiens PWY-6557,False
+1069,1,dermatan sulfate biosynthesis Homo sapiens PWY-6571,False
+1070,1,chondroitin sulfate biosynthesis Homo sapiens PWY-6569,False
+1071,1,chondroitin sulfate biosynthesis (late stages) Homo sapiens PWY-6567,False
+1072,12,"fructose 2,6-bisphosphate synthesis Homo sapiens PWY66-423",False
+1073,5,triacylglycerol biosynthesis Homo sapiens TRIGLSYN-PWY,False
+1074,5,CDP-diacylglycerol biosynthesis Homo sapiens PWY-5667,False
+1075,5,glycerol degradation Homo sapiens PWY-4261,False
+1076,4,tetrapyrrole biosynthesis Homo sapiens PWY-5189,False
+1077,4,heme biosynthesis Homo sapiens PWY-5920,False
+1078,0,terminal O-glycans residues modification Homo sapiens PWY-7434,False
+1079,21,mucin core 1 and core 2 O-glycosylation Homo sapiens PWY-7433,False
+1080,18,ubiquinol-10 biosynthesis Homo sapiens PWY-5872,False
+1081,6,pentose phosphate pathway Homo sapiens PENTOSE-P-PWY,False
+1082,20,urea cycle Homo sapiens PWY-4984,False
+1083,20,citrulline-nitric oxide cycle Homo sapiens PWY-4983,False
+1084,17,phosphatidylethanolamine biosynthesis II Homo sapiens PWY4FS-6,False
+1085,18,phosphatidylcholine biosynthesis Homo sapiens PWY3O-450,False
