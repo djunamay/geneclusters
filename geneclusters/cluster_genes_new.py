@@ -87,7 +87,7 @@ def assign_cluster_based_on_proba(probas):
         assignment.append(x)
     return np.array(assignment)
 
-def create_random_labeling(matrix, threshold, seed):
+def create_random_labeling(matrix, threshold, seed=None):
     '''
     returns ndarray grouping pathways and genes into clusters based on threshold
     Args:
@@ -332,6 +332,7 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified)
     else:
         return 0
     
+@nb.njit()
 def full_kl_step(labeling, matrix, c, KL_modified):
     '''
     Apply kernighan-lin algorithm to all partition pairs
@@ -371,6 +372,34 @@ def evaluate_cut(matrix, labeling, c):
                 else:
                     value += c
     return value
+
+# @nb.njit()
+# def run_KL(labeling, matrix, c, KL_modified):
+#     '''
+#     Run kernighan-lin algorithm to cluster gene-pathway matrix into equally-sized partitions
+#     Args:
+#         labeling 1D ndarray
+#             output vector from create_random_labeling()
+#         matrix ndarray
+#             gene x pathway matrix
+#         c float 
+#             probability of false negative pathway-gene association (0<=c<= 1)
+#     '''
+#     tot = 0
+#     #with tqdm() as p:
+#     while True:
+#         impr = full_kl_step(labeling, matrix, c, KL_modified)
+#         tot += impr
+#         print('tot_impr': tot, 'last_impr': impr, 'loss': evaluate_cut(matrix, labeling, c))
+        
+#             #p.set_postfix({
+#              #       'tot_impr': tot,
+#               #      'last_impr': impr,
+#                #     'loss': evaluate_cut(matrix, labeling, c)
+#             #})
+#             #p.update()
+#         if impr==0:
+#             break
 
 def run_KL(labeling, matrix, c, KL_modified):
     '''
