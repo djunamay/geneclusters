@@ -8,7 +8,56 @@ import numba as nb
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import shortest_path
 
+def plot_component(graph, unique_clusters, colors, k, iterations, scale, component = None, center=None, seed=None):  
+    if component is None:
+        graph_temp = graph
+    else:
+        graph_temp = graph.subgraph(component)
+    cur_labels = np.array([graph.nodes[node]['cluster_id'] for node in graph_temp.nodes])
+
+    layout = networkx.spring_layout(graph_temp,k=k, iterations=iterations, weight='weight', scale=scale, seed=seed, center=center)
+    pos = np.array(list(layout.values()))
+    plot_edges(layout, graph_temp, pos)
+    plot_nodes(graph_temp, pos, cur_labels, unique_clusters)
+    
+    
+def plot_edges(layout, graph, pos):
+    for e_from, e_to in list(graph.edges):
+        ss = np.array([layout[e_from], layout[e_to]])
+        if graph.get_edge_data(e_from, e_to)['weight'] >=0.5:
+            plt.plot(*(ss.T), c='black', alpha=0.1)
+        
+def plot_nodes(graph, pos, cur_labels, unique_clusters):
+    #ipdb.set_trace()
+    types = np.array([graph.nodes[node]['type'] for node in graph.nodes])
+    names = np.array([graph.nodes[node]['name'] for node in graph.nodes])  
+    for i, cluster_name in enumerate(unique_clusters):
+        index = cur_labels==cluster_name
+        if np.sum(index)==0:
+            continue
+        plot_single_cluster(colors[i], pos[index], types[index], names[index], cluster_name)
+        
+def plot_single_cluster(col, pos_curr, types_curr, names_curr, cluster_name):
+    props = dict(boxstyle='round', facecolor='white', alpha=1, edgecolor=col)
+    x, y = np.mean(pos_curr, axis = 0)
+    x-=0.2
+    plt.scatter(*pos_curr[types_curr==0].T, color=col, zorder=5, s=200, cmap='tab20', edgecolor="black", linewidth=1)
+    plt.scatter(*pos_curr[types_curr==1].T, color=col, zorder=5, s=200, cmap='tab20', edgecolor="black", linewidth=1, marker='s')
+    
+    labels = ''
+    n=0
+    
+    for name in names_curr:
+        if name in selected_names:
+            labels+='\n'+name
+            n+=1
+    
+    plt.text(x, y, labels,  bbox=props, c = col, fontsize = 10, zorder=6, style = "italic")
+    plt.text(x, y+(0.045*(n+1)), cluster_name,  bbox=props, c = col, fontsize = 15, zorder=6, weight = "bold")
+
+    
 def group(matrix, cols_mapped, rows_mapped, mapping, num_groups):
+    # author: Guillaume
     result = np.zeros((num_groups, num_groups))
     for i, gi in zip(range(matrix.shape[0]), rows_mapped):
         for j, gj in zip(range(matrix.shape[1]), cols_mapped):
@@ -16,6 +65,7 @@ def group(matrix, cols_mapped, rows_mapped, mapping, num_groups):
     return result
 
 def compute_groupped_matrix(matrix, cols, rows):
+    # author: Guillaume
     all_groups = list(sorted(list(set(cols) | set(rows))))
     num_groups = len(all_groups)
     mapping = dict(zip(all_groups, range(num_groups)))
@@ -25,6 +75,7 @@ def compute_groupped_matrix(matrix, cols, rows):
     return groupped_matrix, mapping
     
 def find_similar_clusters(groupped_matrix, threshold=0.75):
+    # author: Guillaume
     replacements = {}
     for g1 in range(len(groupped_matrix)):
         for g2 in range(g1 + 1, len(groupped_matrix)):
@@ -446,7 +497,7 @@ def evaluate_cut(matrix, labeling, c):
 #         if impr==0:
 #             break
 
-def run_KL(labeling, matrix, c, KL_modified):
+def run_KL(labeling, matrix, c, KL_modified, no_progress=False):
     '''
     Run kernighan-lin algorithm to cluster gene-pathway matrix into equally-sized partitions
     Args:
@@ -458,20 +509,27 @@ def run_KL(labeling, matrix, c, KL_modified):
             probability of false negative pathway-gene association (0<=c<= 1)
     '''
     tot = 0
-    with tqdm() as p:
+    if no_progress:
         while True:
             impr = full_kl_step(labeling, matrix, c, KL_modified)
             tot += impr
-            p.set_postfix({
-                    'tot_impr': tot,
-                    'last_impr': impr,
-                    'loss': evaluate_cut(matrix, labeling, c)
-            })
-            p.update()
             if impr==0:
                 break
+    else:
+        with tqdm() as p:
+            while True:
+                impr = full_kl_step(labeling, matrix, c, KL_modified)
+                tot += impr
+                p.set_postfix({
+                        'tot_impr': tot,
+                        'last_impr': impr,
+                        'loss': evaluate_cut(matrix, labeling, c)
+                })
+                p.update()
+                if impr==0:
+                    break
                 
-def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labels=True, unweighted=True, seed=5):
+def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labels=True, unweighted=True, seed=5, no_progress=False, mat=None):
     '''
     returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
     Args:
@@ -489,7 +547,9 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labe
         unweighted bool
             whether to consider weights when computing the shortest path between nodes, only considiered if random_labels is False
     '''
-    mat = get_gene_pathway_matrix(path)
+    if mat is None:
+        print('test')
+        mat = get_gene_pathway_matrix(path)
     pathway_names = mat.index
     gene_names = mat.columns
     matrix = np.ascontiguousarray(mat.values.T)
@@ -497,12 +557,12 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labe
         labeling = create_random_labeling(matrix, threshold, seed)
     else:
         labeling = create_nonrandom_labeling(matrix, threshold, unweighted, C, seed)
-    run_KL(labeling, matrix, 0, KL_modified)
+    run_KL(labeling, matrix, 0, KL_modified, no_progress)
     frame = pd.DataFrame(labeling)
     frame['description'] = np.concatenate([gene_names, pathway_names])
     frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
     return frame, evaluate_cut(matrix, labeling, C)
 
-def get_scores(path, C, KL_modified, random_labels, unweighted, seed, thresh):
-    o1, o2 = get_kernighan_lin_clusters(path, thresh, C, KL_modified, random_labels, unweighted, seed)
+def get_scores(path, C, KL_modified, random_labels, unweighted, no_progress, mat, seed, thresh):
+    o1, o2 = get_kernighan_lin_clusters(path, thresh, C, KL_modified, random_labels, unweighted, seed, no_progress, mat)
     return np.array(o1[0]), o2
