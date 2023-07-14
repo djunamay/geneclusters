@@ -8,6 +8,51 @@ import numba as nb
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import shortest_path
 
+def group(matrix, cols_mapped, rows_mapped, mapping, num_groups):
+    result = np.zeros((num_groups, num_groups))
+    for i, gi in zip(range(matrix.shape[0]), rows_mapped):
+        for j, gj in zip(range(matrix.shape[1]), cols_mapped):
+            result[gi, gj] += matrix[i, j]
+    return result
+
+def compute_groupped_matrix(matrix, cols, rows):
+    all_groups = list(sorted(list(set(cols) | set(rows))))
+    num_groups = len(all_groups)
+    mapping = dict(zip(all_groups, range(num_groups)))
+    cols_mapped = np.vectorize(mapping.get)(cols)
+    rows_mapped = np.vectorize(mapping.get)(rows)
+    groupped_matrix = group(matrix, cols_mapped, rows_mapped, mapping, num_groups)
+    return groupped_matrix, mapping
+    
+def find_similar_clusters(groupped_matrix, threshold=0.75):
+    replacements = {}
+    for g1 in range(len(groupped_matrix)):
+        for g2 in range(g1 + 1, len(groupped_matrix)):
+            diag = groupped_matrix[g1, g1] + groupped_matrix[g2, g2]
+            anti_diag = groupped_matrix[g1, g2] + groupped_matrix[g2, g1]
+            
+            if diag != 0 and anti_diag / diag > threshold:
+                replacements[g2] = g1
+    return replacements
+
+def get_representative_name_per_cluster(bipartite_mat, colnames_mat, rownames_mat, description_table, cluster):
+    genes = set(description_table.loc[description_table['is_gene']&(description_table['new_cluster']==cluster)]['description'])
+    paths = set(description_table.loc[np.invert(description_table['is_gene'])&(description_table['new_cluster']==cluster)]['description'])
+    if len(paths)==0:
+        return 'C.'+str(cluster), np.nan, np.nan, np.nan
+    else:
+        index_col = [x in genes for x in colnames_mat]
+        index_row = [x in paths for x in rownames_mat]
+
+    
+        sum_internal = np.sum(bipartite_mat[index_row][:,index_col], axis=1)
+        sum_external = np.sum(bipartite_mat[index_row][:,np.invert(index_col)], axis=1)
+        sum_ratio = sum_internal/(sum_external+sum_internal)
+        S = np.argmax(sum_ratio)
+        rep_name = rownames_mat[index_row][S]
+
+        return 'C.'+str(cluster), rep_name.split(' (')[0], sum_ratio[S], sum_internal[S]
+    
 def get_gene_pathway_matrix(path_to_dict):
     '''
     returns pandas dataframe of pathways x genes indicating which pathway-gene pairs are key-value pairs in the input dictionary 
