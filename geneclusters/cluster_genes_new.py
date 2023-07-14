@@ -7,8 +7,10 @@ from ipdb import set_trace
 import numba as nb
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import shortest_path
+import networkx
+import matplotlib.pyplot as plt
 
-def plot_component(graph, unique_clusters, colors, k, iterations, scale, component = None, center=None, seed=None):  
+def plot_component(graph, selected_names, unique_clusters, colors, k, iterations, scale, component = None, center=None, seed=None):  
     if component is None:
         graph_temp = graph
     else:
@@ -18,7 +20,7 @@ def plot_component(graph, unique_clusters, colors, k, iterations, scale, compone
     layout = networkx.spring_layout(graph_temp,k=k, iterations=iterations, weight='weight', scale=scale, seed=seed, center=center)
     pos = np.array(list(layout.values()))
     plot_edges(layout, graph_temp, pos)
-    plot_nodes(graph_temp, pos, cur_labels, unique_clusters)
+    plot_nodes(graph_temp, selected_names, pos, cur_labels, unique_clusters, colors)
     
     
 def plot_edges(layout, graph, pos):
@@ -27,7 +29,7 @@ def plot_edges(layout, graph, pos):
         if graph.get_edge_data(e_from, e_to)['weight'] >=0.5:
             plt.plot(*(ss.T), c='black', alpha=0.1)
         
-def plot_nodes(graph, pos, cur_labels, unique_clusters):
+def plot_nodes(graph, selected_names, pos, cur_labels, unique_clusters, colors):
     #ipdb.set_trace()
     types = np.array([graph.nodes[node]['type'] for node in graph.nodes])
     names = np.array([graph.nodes[node]['name'] for node in graph.nodes])  
@@ -35,9 +37,9 @@ def plot_nodes(graph, pos, cur_labels, unique_clusters):
         index = cur_labels==cluster_name
         if np.sum(index)==0:
             continue
-        plot_single_cluster(colors[i], pos[index], types[index], names[index], cluster_name)
+        plot_single_cluster(colors[i], pos[index], types[index], names[index], cluster_name, selected_names)
         
-def plot_single_cluster(col, pos_curr, types_curr, names_curr, cluster_name):
+def plot_single_cluster(col, pos_curr, types_curr, names_curr, cluster_name, selected_names):
     props = dict(boxstyle='round', facecolor='white', alpha=1, edgecolor=col)
     x, y = np.mean(pos_curr, axis = 0)
     x-=0.2
