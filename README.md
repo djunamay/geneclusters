@@ -36,6 +36,7 @@ from geneclusters.cluster_genes_new import get_scores, get_kernighan_lin_cluster
 
 ```python
 # run with internet
+gseapy.get_library_name() # to show library names
 x = gseapy.get_library('HumanCyc_2016')
 np.save('HumanCyc_2016.npy', x)
 ```
