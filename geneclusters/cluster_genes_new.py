@@ -431,7 +431,7 @@ def kernighan_lin_step(labeling, matrix, partition1, partition2, c, KL_modified)
         return 0
     
 @nb.njit()
-def full_kl_step(labeling, matrix, c, KL_modified):
+def full_kl_step(labeling, matrix, c, KL_modified, seed=None):
     '''
     Apply kernighan-lin algorithm to all partition pairs
         labeling 1D ndarray
@@ -441,6 +441,7 @@ def full_kl_step(labeling, matrix, c, KL_modified):
         c float 
             probability of false negative pathway-gene association (0<=c<= 1)
     '''
+    np.random.seed(seed)
     num_clusters = len(set(labeling))
     order = np.random.permutation(num_clusters ** 2)
     impr = 0
@@ -499,7 +500,7 @@ def evaluate_cut(matrix, labeling, c):
 #         if impr==0:
 #             break
 
-def run_KL(labeling, matrix, c, KL_modified, no_progress=False):
+def run_KL(labeling, matrix, c, KL_modified, no_progress=False, seed=None):
     '''
     Run kernighan-lin algorithm to cluster gene-pathway matrix into equally-sized partitions
     Args:
@@ -513,14 +514,14 @@ def run_KL(labeling, matrix, c, KL_modified, no_progress=False):
     tot = 0
     if no_progress:
         while True:
-            impr = full_kl_step(labeling, matrix, c, KL_modified)
+            impr = full_kl_step(labeling, matrix, c, KL_modified, seed)
             tot += impr
             if impr==0:
                 break
     else:
         with tqdm() as p:
             while True:
-                impr = full_kl_step(labeling, matrix, c, KL_modified)
+                impr = full_kl_step(labeling, matrix, c, KL_modified, seed)
                 tot += impr
                 p.set_postfix({
                         'tot_impr': tot,
@@ -559,7 +560,7 @@ def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labe
         labeling = create_random_labeling(matrix, threshold, seed)
     else:
         labeling = create_nonrandom_labeling(matrix, threshold, unweighted, C, seed)
-    run_KL(labeling, matrix, 0, KL_modified, no_progress)
+    run_KL(labeling, matrix, 0, KL_modified, no_progress, seed)
     frame = pd.DataFrame(labeling)
     frame['description'] = np.concatenate([gene_names, pathway_names])
     frame['is_gene'] = np.arange(frame.shape[0]) < matrix.shape[0]
