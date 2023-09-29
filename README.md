@@ -1,3 +1,9 @@
+> [!WARNING]  
+> **This repo is not open-source.** You may view and fork this project, but this work otherwise comes with no permissions. **You may not use, distribute, or modify any of the code that is part of this project.** We will make this project open-source upon publication of our paper in a peer-reviewed journal. For more info see [here](https://opensource.guide/legal/#are-public-github-projects-open-source). Thanks for your understanding!
+
+> [!IMPORTANT]  
+> This repo is under construction; Docstrings are still being added. Please check back soon!
+
 ### Kernighan-Lin Heuristic
 This code implements the Kernighan-Lin algorithm, described [here](https://ieeexplore.ieee.org/document/6771089), to partition a bipartite graph (weighted or unweighted edges) into a number of specified partitions, with the objective of minimizing the (weighted) sum of edges crossing partitions. 
 
