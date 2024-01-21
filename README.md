@@ -14,7 +14,7 @@ In our [paper](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1) we s
 
 
 ## Usage
-
+show examples from examples notebook
 ###
 
 ###
@@ -23,6 +23,7 @@ In our [paper](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1) we s
 [[CMU]](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/kernlin.pdf)
 [[Wikipedia]](https://en.wikipedia.org/wiki/Kernighan%E2%80%93Lin_algorithm)
 
+also explain the other methods 
 
 ![Main figure](main3.png)
 
@@ -39,6 +40,23 @@ If you use this code in your work, please cite using the following BibTeX entry:
   title = {A single-cell atlas of {ABCA}7 loss-of-function reveals lipid disruptions,  mitochondrial dysfunction and {DNA} damage in neurons}
 }
 ```
+## Installation 
+pip package?
+
+## Questions?
+Please email us: djuna@mit.edu
+
+
+
+
+
+
+
+SCRAP:
+
+
+
+
 
 ### Kernighan-Lin Heuristic
 This code implements the Kernighan-Lin algorithm, described [here](https://ieeexplore.ieee.org/document/6771089), to partition a bipartite graph (weighted or unweighted edges) into a number of specified partitions, with the objective of minimizing the (weighted) sum of edges crossing partitions. 
