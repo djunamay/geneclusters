@@ -15,10 +15,10 @@ Spectral clustering performed significantly better to all other algorithms based
 Overall, these results indicate the importance for non-redundant gene-pathway groupings to interpret biological effects. They also indicate that for some gene-pathway graphs, such as the one in this study, graph partitioning is a better approach than clustering. 
 
 <div style="text-align: center;">
-<img src="./Extended_Figure_5_updateed.png" alt= “Benchmarking” width="50%" height="80%">
+<img src="./Extended_Figure_5_updateed.png" alt= “Benchmarking” width="100%" height="100%">
 </div>
 
-<div style="width: 50%;margin: 0 auto; text-align: left"> <!-- Change the percentage as needed -->
+<div style="width: 100%;margin: 0 auto; text-align: left"> <!-- Change the percentage as needed -->
     <p>
         <strong>Benchmarking partitioning and clustering algorithms for gene-pathway grouping.</strong> 
         <strong>(A)</strong> Jaccard indices quantifying overlap of genes for all 111 pathways in graph G (see Methods; Supplementary Text). 
