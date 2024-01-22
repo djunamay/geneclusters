@@ -21,8 +21,7 @@ see `examples.ipynb` notebook for K/L, METIS, spectral clustering, and spectral 
 gene_sets = gseapy.get_library_name()
 print(gene_sets)
 ```
-
-['ARCHS4_Cell-lines', 'ARCHS4_IDG_Coexp', 'ARCHS4_Kinases_Coexp',...]
+	['ARCHS4_Cell-lines', 'ARCHS4_IDG_Coexp', 'ARCHS4_Kinases_Coexp',...]
 
 ```python
 # run with internet
@@ -37,13 +36,12 @@ frame, loss_temp = get_kernighan_lin_clusters(path=None, threshold=30, C=0, KL_m
 frame.columns = ['cluster', 'description', 'is_gene']
 frame.head()
 ```
-
 	cluster	description	is_gene
-5	0.0	ABAT	True
-6	1.0	ABHD12	True
-8	1.0	ABHD6	True
-9	1.0	ACAA1	True
-11	0.0	ACAD8	True
+	5	ABAT	True
+	6	ABHD12	True
+	8	ABHD6	True
+	9	ACAA1	True
+	11	ACAD8	True
 
 ```python
 # plot graph
