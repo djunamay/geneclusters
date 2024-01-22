@@ -16,6 +16,10 @@ In our [paper](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1) we s
 ## Usage
 ### Quickstart
 ```python
+from geneclusters.benchmarking import save_gset
+from geneclusters.geneclusters import get_gene_pathway_matrix, get_kernighan_lin_clusters
+from geneclusters.plotting_geneclusters get_layout, plot_graph
+
 # list all genesets
 gene_sets = gseapy.get_library_name()
 print(gene_sets)
