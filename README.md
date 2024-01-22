@@ -14,7 +14,7 @@ In our [paper](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1) we s
 
 
 ## Usage
-### quickstart
+### Quickstart
 ```python
 # list all genesets
 gene_sets = gseapy.get_library_name()
@@ -41,20 +41,20 @@ graph, pos, cur_labels, unique_clusters, colors, layout = get_layout(frame, mat.
 out_path = './'
 plot_graph(layout, pos, graph, cur_labels, unique_clusters, colors, out_path)
 ```
-### more
+### More examples
 see `examples.ipynb` notebook for K/L, METIS, spectral clustering, and spectral bisection implementations, benchmarking, and visualization 
 
-## Notes
-- It is worth trying a range of algorithms, as the best-performing one might differ based on the specific graph of interest.
-- In [our case](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1), K/L and METIS perform very similarly, but we end up using the K/L algorithm because we found it to perform better on larger graphs.
-- KL_modified: we add a slight modification 
-
-## Some info on the algorithms
+## Algorithms overview
 
 ### K/L
 [[CMU]](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/kernlin.pdf)
 [[Wikipedia]](https://en.wikipedia.org/wiki/Kernighan%E2%80%93Lin_algorithm)
 ![Main figure](main3.png)
+
+## Notes
+- It is worth trying a range of algorithms, as the best-performing one might differ based on the specific graph of interest.
+- In [our case](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1), K/L and METIS perform very similarly, but we end up using the K/L algorithm because we found it to perform better on larger graphs.
+- KL_modified: we add a slight modification 
 
 ## Citation
 If you use this code in your work, please cite using the following BibTeX entry:
