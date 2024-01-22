@@ -16,9 +16,47 @@ In our [paper](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1) we s
 ## Usage
 see `examples.ipynb` notebook for K/L, METIS, spectral clustering, and spectral bisection implementations, benchmarking, and visualization 
 
+```python
+# list all genesets
+gene_sets = gseapy.get_library_name()
+print(gene_sets)
+```
+
+['ARCHS4_Cell-lines', 'ARCHS4_IDG_Coexp', 'ARCHS4_Kinases_Coexp',...]
+
+```python
+# run with internet
+# list all genesets
+gene_sets = gseapy.get_library_name()
+```
+
+```python
+# assign the clusters
+mat = get_gene_pathway_matrix(path)
+frame, loss_temp = get_kernighan_lin_clusters(path=None, threshold=30, C=0, KL_modified=True, random_labels=True, unweighted=True, seed=5, no_progress=False, mat=mat)
+frame.columns = ['cluster', 'description', 'is_gene']
+frame.head()
+```
+
+	cluster	description	is_gene
+5	0.0	ABAT	True
+6	1.0	ABHD12	True
+8	1.0	ABHD6	True
+9	1.0	ACAA1	True
+11	0.0	ACAD8	True
+
+```python
+# plot graph
+s=10000
+graph, pos, cur_labels, unique_clusters, colors, layout = get_layout(frame, mat.T, s, 15)
+out_path = './'
+plot_graph(layout, pos, graph, cur_labels, unique_clusters, colors, out_path)
+```
+
 ## Notes
-It is worth trying a range of algorithms, as the best-performing one might differ based on the specific graph of interest.
-In [our case](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1), K/L and METIS perform very similarly, but we end up using the K/L algorithm because we found it to perform better on larger graphs.
+- It is worth trying a range of algorithms, as the best-performing one might differ based on the specific graph of interest.
+- In [our case](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1), K/L and METIS perform very similarly, but we end up using the K/L algorithm because we found it to perform better on larger graphs.
+- KL_modified: we add a slight modification 
 
 ## Some info on the K/L heuristic
 [[CMU]](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/kernlin.pdf)
@@ -62,7 +100,7 @@ from scipy.sparse.csgraph import shortest_path
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from geneclusters.cluster_genes_new import get_scores, get_kernighan_lin_clusters, get_gene_pathway_matrix, get_full_matrix_from_bipartite
+from geneclusters.geneclusters import get_scores, get_kernighan_lin_clusters, get_gene_pathway_matrix, get_full_matrix_from_bipartite
 ```
 
 2. Download pathway database(s)
@@ -194,37 +232,5 @@ frame[frame['cluster']==23]['description']
     Name: description, dtype: object
 
 
-
-5. Order matrix entries by labeling
-
-
-```python
-mat = get_gene_pathway_matrix('./examples/HumanCyc_2016.npy')
-matrix = np.ascontiguousarray(mat.values.T)
-```
-
-
-```python
-sns.heatmap(matrix[np.argsort(frame[frame['is_gene']]['cluster'])][np.argsort(frame[np.invert(frame['is_gene'])]['cluster'])])
-plt.show()
-```
-
-
-    
-![png](README_files/README_15_0.png)
-    
-
-
-6. Order matrix entries randomly
-
-
-```python
-sns.heatmap(matrix[np.random.permutation(range(matrix.shape[0]))][:,np.random.permutation(range(matrix.shape[1]))])
-plt.show()
-```
-
-
-    
-![png](README_files/README_17_0.png)
     
 
