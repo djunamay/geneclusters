@@ -14,17 +14,15 @@ In our [paper](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1) we s
 
 
 ## Usage
-show examples from examples notebook
-###
+see `examples.ipynb` notebook for K/L, METIS, spectral clustering, and spectral bisection implementations, benchmarking, and visualization 
 
-###
+## Notes
+It is worth trying a range of algorithms, as the best-performing one might differ based on the specific graph of interest.
+In [our case](https://www.biorxiv.org/content/10.1101/2023.09.05.556135v1), K/L and METIS perform very similarly, but we end up using the K/L algorithm because we found it to perform better on larger graphs.
 
-## K/L heuristic
+## Some info on the K/L heuristic
 [[CMU]](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/kernlin.pdf)
 [[Wikipedia]](https://en.wikipedia.org/wiki/Kernighan%E2%80%93Lin_algorithm)
-
-also explain the other methods 
-
 ![Main figure](main3.png)
 
 ## Citation
@@ -41,31 +39,14 @@ If you use this code in your work, please cite using the following BibTeX entry:
 }
 ```
 ## Installation 
-pip package?
+`git clone https://github.com/djunamay/geneclusters.git`
+and follow the `examples.ipynb`
 
 ## Questions?
 Please email us: djuna@mit.edu
 
 
-
-
-
-
-
-SCRAP:
-
-
-
-
-
-### Kernighan-Lin Heuristic
-This code implements the Kernighan-Lin algorithm, described [here](https://ieeexplore.ieee.org/document/6771089), to partition a bipartite graph (weighted or unweighted edges) into a number of specified partitions, with the objective of minimizing the (weighted) sum of edges crossing partitions. 
-
-
-### Other Sources: 
-
-
-### Example run
+## More examples:
 
 
 1. load dependencies
