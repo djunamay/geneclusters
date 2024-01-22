@@ -23,7 +23,7 @@ import networkx
 import gseapy
 
 # Local module imports
-from ABCA7lof2.geneclusters import (
+from geneclusters.geneclusters import (
     get_scores, 
     get_kernighan_lin_clusters, 
     get_gene_pathway_matrix, 
@@ -593,4 +593,16 @@ def score_rep_paths(frame, mat_sub, scores, cluster, celltype, thresh=5):
     temp['cluster'] = cluster
     
     return temp
+
+def plot_component(graph, selected_names, unique_clusters, colors, k, iterations, scale, component = None, center=None, seed=None, S=200):  
+    if component is None:
+        graph_temp = graph
+    else:
+        graph_temp = graph.subgraph(component)
+    cur_labels = np.array([graph.nodes[node]['cluster_id'] for node in graph_temp.nodes])
+
+    layout = networkx.spring_layout(graph_temp,k=k, iterations=iterations, weight='weight', scale=scale, seed=seed, center=center)
+    pos = np.array(list(layout.values()))
+    plot_edges(layout, graph_temp, pos)
+    plot_nodes(graph_temp, selected_names, pos, cur_labels, unique_clusters, colors, S)
 

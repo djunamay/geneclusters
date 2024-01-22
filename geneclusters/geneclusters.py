@@ -17,6 +17,7 @@ from tqdm import tqdm
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import shortest_path
 import networkx
+import metis
 
 # Visualization
 import matplotlib.pyplot as plt
@@ -877,23 +878,29 @@ def run_KL(labeling, matrix, c, KL_modified, no_progress=False, seed=None):
                     break
 
 def get_kernighan_lin_clusters(path, threshold, C, KL_modified=True, random_labels=True, unweighted=True, seed=5, no_progress=False, mat=None):
-    '''
-    returns pandas dataframe annotating each gene and pathway to a cluster, based on pathway-gene dictionary and args
-    Args:
-        path str
-            path to pathway-gene dictionary as ndarray
-        threshold int
-            if random_labels is True, gives number of genes per cluster. Min = 1, Max = total number of genes and pathways
-            if random_labels is False, gives number of desired clusters. Min = 1, Max = total number of genes and pathways
-        C float
-            probability of false negative pathway-gene association (0<=c<= 1)
-        KL_modified bool
-            whether to run the modified KL algorithm 
-        random_labels
-            whether to randomize initiating labels or assign based on node centrality
-        unweighted bool
-            whether to consider weights when computing the shortest path between nodes, only considiered if random_labels is False
-    '''
+    """
+    Computes clusters using the Kernighan-Lin algorithm on a gene-pathway matrix.
+
+    This function applies the Kernighan-Lin (KL) algorithm to a matrix representing
+    gene-pathway relationships. It can operate on a provided matrix or construct
+    the matrix from a specified path. 
+
+    Parameters:
+    path (str): Path to the file containing the gene-pathway data.
+    threshold (int): number of genes per cluster. Min = 1, Max = total number of genes and pathways
+    C (float): probability of false negative pathway-gene association (0<=c<= 1)
+    KL_modified (bool, optional): If True, uses a modified version of the KL algorithm. Defaults to True.
+    random_labels (bool, optional): If True, initializes with random labeling. Defaults to True.
+    unweighted (bool, optional): If True, treats the matrix as unweighted. Defaults to True.
+    seed (int, optional): Seed for random number generator. Defaults to 5.
+    no_progress (bool, optional): If True, progress information is not printed. Defaults to False.
+    mat (pandas.DataFrame or None, optional): Precomputed gene-pathway matrix. If None, the matrix is generated from the given path. Defaults to None.
+
+    Returns:
+    tuple: A tuple containing two elements:
+        - pandas.DataFrame: A DataFrame with cluster labels, description, and a boolean indicating if it's a gene.
+        - float: The cut value representing the quality of the partition.
+    """
     if mat is None:
         print('test')
         mat = get_gene_pathway_matrix(path)
@@ -941,3 +948,61 @@ def get_scores(path, C, KL_modified, random_labels, unweighted, no_progress, mat
     """
     o1, o2 = get_kernighan_lin_clusters(path, thresh, C, KL_modified, random_labels, unweighted, seed, no_progress, mat)
     return np.array(o1[0]), o2
+
+def run_METIS(g, mat_sub, nparts, i):
+    """
+    Partitions a graph using the METIS algorithm and evaluates the partition quality.
+
+    This function applies the METIS algorithm to partition a graph 'g' into a specified
+    number of parts 'nparts'. After partitioning, it evaluates the cut value of the 
+    partition using the submatrix 'mat_sub'.
+
+    Parameters:
+    g (networkx.Graph or similar): The graph to be partitioned.
+    mat_sub (pandas.DataFrame or numpy.ndarray): The matrix used in evaluating the partition cut.
+    nparts (int): The number of parts to divide the graph into.
+
+    Returns:
+    tuple: A tuple containing two elements:
+        - numpy.ndarray: An array of size equal to the number of nodes in 'g', with each 
+          element indicating the partition index a node belongs to.
+        - float: The cut value representing the quality of the partition.
+    """
+    sc = metis.part_graph(g, nparts=nparts, tpwgts=None, ubvec=None, recursive=False, seed=i)[1] 
+    cut = evaluate_cut(np.ascontiguousarray(mat_sub.values.T), sc, 0)
+    return sc, cut
+
+def run_SB(nclust, full_mat, mat_sub):
+    """
+    Performs hierarchical spectral biclustering on a given matrix.
+
+    This function iteratively applies spectral biclustering to partition the input
+    matrix 'full_mat' into a specified number of clusters 'nclust'. The clustering
+    is done hierarchically, refining the partition in each iteration based on the
+    results of the previous step. The final clustering labels and the corresponding
+    cut value are computed and returned.
+
+    Parameters:
+    nclust (int): The target number of clusters to achieve in the biclustering process.
+    full_mat (numpy.ndarray): A matrix representing the data to be clustered.
+
+    Returns:
+    tuple: A tuple containing two elements:
+        - numpy.ndarray: An array representing the final clustering labels for each row in 'full_mat'.
+        - float: The cut value representing the quality of the biclustering.
+    """
+    i = 0
+    
+    it = int(np.log2(nclust))
+    labels_sp = np.zeros((nclust,full_mat.shape[0]))
+
+    for x in range(it):
+        grps = np.unique(labels_sp, axis=1)
+        index = [[np.unique(labels_sp[:,x]==grps[:,y])[0] for x in range(labels_sp.shape[1])] for y in range(grps.shape[1])]
+        for j in range(len(index)):
+            get_spectral_partition(labels_sp,  get_LP(full_mat[index[j]][:,index[j]]), i, index[j])
+            i+=1
+    labels_sp = [np.argwhere(np.sum(np.unique(labels_sp, axis=1)-labels_sp[:,x].reshape(-1,1)==0, axis=0)==nclust)[0][0] for x in range(labels_sp.shape[1])] 
+    loss_sp = evaluate_cut(np.ascontiguousarray(mat_sub.values.T), labels_sp, 0)
+    
+    return labels_sp, loss_sp
